@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/row"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
+    tools:context="com.tripplanner.view.MainActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="horizontal"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:textAppearance="?android:attr/textAppearanceSmall">
+
+            <TextView
+                android:id="@+id/activityMainRowText"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:weightSum="20">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="7"
+                android:orientation="horizontal"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:weightSum="4">
+
+                <TextView
+                    android:id="@+id/activityMainRowHours"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/activityMainRowHoursLabel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="h"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/activityMainRowMins"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/activityMainRowMinsLabel"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="m"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+
+            <ImageButton
+                android:id="@+id/activityMainRowButton"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="13"
+                android:layout_margin="5dp"
+                android:backgroundTint="@color/colorPrimary"
+                android:src="@mipmap/ic_clock" />
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,6 +1,9 @@
 package com.tripplanner.view;
 
-
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -17,20 +20,22 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tripplanner.R;
-import com.tripplanner.controller.MapController;
+import com.tripplanner.controller.MapsController;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private MapController mapController;
+    private MapsController mapsController;
     private static final float ZOOM_POLAND = (float) 5.5;
+    private static final float ZOOM_POINT = (float) 15;
     private static final float LAT_POLAND = (float) 52.03;
     private static final float LNG_POLAND = (float) 19.27;
+    private com.tripplanner.model.Place currentPlace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mapController = new MapController(this);
+        mapsController = new MapsController(this);
         setContentView(R.layout.activity_maps);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -39,21 +44,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(Place place) {
-               mapController.selectPlace(new com.tripplanner.model.Place(place.getLatLng()), false);
+                currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
+                mapsController.selectPlace(currentPlace, false);
             }
             @Override
             public void onError(Status status) {
-                // TODO: Handle the error.
             }
         });
-    }
-
-    public void selectPoint(LatLng latLng, boolean animate){
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions().position(latLng));
-        if(animate){
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(latLng).zoom(15).build()));
-        }
     }
 
     @Override
@@ -64,8 +61,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                mapController.selectPlace(new com.tripplanner.model.Place(latLng), true);
+                currentPlace = new com.tripplanner.model.Place(latLng);
+                mapsController.selectPlace(currentPlace, true);
             }
         });
     }
+
+    public void selectPoint(LatLng latLng, boolean animate) {
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions().position(latLng));
+        if (animate) {
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(latLng).zoom(ZOOM_POINT).build()));
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (currentPlace != null) {
+            new AlertDialog.Builder(MapsActivity.this)
+                    .setMessage("Czy na pewno chcesz dodać wybrany punkt?")
+                    .setNegativeButton("Nie", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mapsController.cancelAddingPlace();
+                        }
+                    })
+                    .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mapsController.addPlace(currentPlace);
+                        }
+                    })
+                    .show();
+        } else {
+            mapsController.cancelAddingPlace();
+        }
+    }
+
+
 }

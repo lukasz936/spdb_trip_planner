@@ -9,13 +9,14 @@ import java.util.Date;
  */
 
 public class Place {
-    LatLng latLng;;
+    LatLng latLng;
     String name;
     Date startDate;
     int duration;
 
     public Place(LatLng latLng) {
         this.latLng = latLng;
+        this.name = String.format("%.1f", latLng.latitude) + ", " + String.format("%.1f", latLng.latitude);
     }
 
     public Place(LatLng latLng, String name) {

@@ -1,5 +1,6 @@
 package com.tripplanner.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,6 +9,18 @@ import java.util.List;
 
 public final class DataManager {
 
-    private List<Place> places;
+    private static List<Place> places = new ArrayList<>();
+
+    public static void addPlace(Place place) {
+        places.add(place);
+    }
+
+    public static void removePlace(int index) {
+        places.remove(index);
+    }
+
+    public static List<Place> getPlaces(){
+        return places;
+    }
 
 }
