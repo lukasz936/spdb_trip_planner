@@ -9,6 +9,7 @@ import java.util.Date;
  */
 
 public class Place {
+    int id;
     LatLng latLng;
     String name;
     Date startDate;
@@ -16,12 +17,20 @@ public class Place {
 
     public Place(LatLng latLng) {
         this.latLng = latLng;
-        this.name = String.format("%.1f", latLng.latitude) + ", " + String.format("%.1f", latLng.latitude);
+        this.name = String.format("%.2f", latLng.latitude) + "   " + String.format("%.2f", latLng.longitude);
     }
 
     public Place(LatLng latLng, String name) {
         this.latLng = latLng;
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public LatLng getLatLng() {

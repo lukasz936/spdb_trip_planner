@@ -1,5 +1,6 @@
 package com.tripplanner.controller;
 
+import com.tripplanner.model.DataManager;
 import com.tripplanner.view.MainActivity;
 
 /**
@@ -16,5 +17,11 @@ public class MainController implements IMainController {
 
     @Override
     public void addLocalization() {
+    }
+
+    @Override
+    public void setDuration(int placeId, int hours, int minutes) {
+        DataManager.getPlace(placeId).setDuration(hours * 60 + minutes);
+        view.setDurationLabel(placeId, hours, minutes);
     }
 }

@@ -29,8 +29,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
+        android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
         android:onClick="addLocalization"
-        android:src="@drawable/ic_add_place" />
+        android:src="@drawable/ic_add_place"
+        app:borderWidth="0dp" />
 
 </android.support.design.widget.CoordinatorLayout>

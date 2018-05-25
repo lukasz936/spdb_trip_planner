@@ -1,6 +1,8 @@
 package com.tripplanner.view;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,22 +15,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.vision.text.Text;
 import com.tripplanner.R;
 import com.tripplanner.controller.MainController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private MainController controller;
-    RelativeLayout placeListLayout;
-    private int i = 0;
+    private RelativeLayout placeListLayout;
+    public List<View> views = new ArrayList<>();
+    private static final int VIEW_ID_OFFSET = 1000000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,35 +113,59 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 1) {
-            if(resultCode == Activity.RESULT_OK){
-                addViewItem(DataManager.getPlaces().get(DataManager.getPlaces().size() - 1).getName());
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                addViewItem(DataManager.getPlaces().get(DataManager.getPlaces().size() - 1));
             }
         }
     }
 
-    public void addViewItem(String text) {
+    public void addViewItem(final Place place) {
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
-        View viewToAdd = inflater.inflate(R.layout.activity_main_row, null, false);
-        viewToAdd.setId(DataManager.getPlaces().size() + 10000001);
-        ((TextView) viewToAdd.findViewById(R.id.activityMainRowText)).setText(text);
-        viewToAdd.findViewById(R.id.activityMainRowButton).setOnClickListener(new View.OnClickListener() {
+        View view = inflater.inflate(R.layout.activity_main_row, null, false);
+        view.setId(DataManager.getPlaces().size() + VIEW_ID_OFFSET);
+        ((TextView) view.findViewById(R.id.activityMainRowText)).setText(place.getName());
+        view.findViewById(R.id.activityMainRowButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View button) {
-                setDuration();
+                openTimePicker(place.getId(), 1, 0);
             }
         });
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 150);
         if (DataManager.getPlaces().size() == 0) {
             params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         } else {
-            params.addRule(RelativeLayout.BELOW, DataManager.getPlaces().size() + 10000000);
+            params.addRule(RelativeLayout.BELOW, DataManager.getPlaces().size() + VIEW_ID_OFFSET - 1);
         }
         params.setMargins(1, 5, 1, 5);
-        viewToAdd.setLayoutParams(params);
-        placeListLayout.addView(viewToAdd);
+        view.setLayoutParams(params);
+        views.add(view);
+        placeListLayout.addView(view);
     }
 
-    public void setDuration(){
+    public void openTimePicker(final int placeId, int currentHours, int currentMinutes) {
+        final Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setTitle("Czas pobytu");
+        dialog.setContentView(R.layout.time_picker_dialog);
+        final NumberPicker numberPickerHour = (NumberPicker) dialog.findViewById(R.id.numberPickerHour);
+        final NumberPicker numberPickerMin = (NumberPicker) dialog.findViewById(R.id.numberPickerMin);
+        numberPickerHour.setMinValue(0);
+        numberPickerHour.setMaxValue(24);
+        numberPickerHour.setValue(currentHours);
+        numberPickerMin.setMinValue(0);
+        numberPickerMin.setMaxValue(60);
+        numberPickerMin.setValue(currentMinutes);
+        dialog.findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.setDuration(placeId, numberPickerHour.getValue(), numberPickerMin.getValue());
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
 
+    public void setDurationLabel(int placeId, int hours, int minutes) {
+        ((TextView) views.get(placeId).findViewById(R.id.activityMainRowHours)).setText(String.valueOf(hours));
+        ((TextView) views.get(placeId).findViewById(R.id.activityMainRowMins)).setText(String.valueOf(minutes));
     }
 }

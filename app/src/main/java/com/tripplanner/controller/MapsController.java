@@ -26,7 +26,6 @@ public class MapsController implements IMapsController {
         } else {
             view.selectPoint(place.getLatLng(), true);
         }
-
     }
 
     @Override
@@ -41,6 +40,5 @@ public class MapsController implements IMapsController {
         view.setResult(Activity.RESULT_CANCELED, new Intent());
         view.finish();
     }
-
 
 }
