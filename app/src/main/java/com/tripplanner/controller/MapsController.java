@@ -3,6 +3,7 @@ package com.tripplanner.controller;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.tripplanner.controller.googleApi.GoogleApiController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
 import com.tripplanner.view.MapsActivity;
@@ -14,9 +15,11 @@ import com.tripplanner.view.MapsActivity;
 public class MapsController implements IMapsController {
 
     private final MapsActivity view;
+    private GoogleApiController googleApiController;
 
     public MapsController(MapsActivity view) {
         this.view = view;
+        googleApiController = new GoogleApiController(view);
     }
 
     @Override
@@ -41,4 +44,8 @@ public class MapsController implements IMapsController {
         view.finish();
     }
 
+    @Override
+    public void showRoute() {
+        googleApiController.sendRequest();
+    }
 }

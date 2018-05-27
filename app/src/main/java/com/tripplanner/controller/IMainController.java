@@ -6,7 +6,6 @@ package com.tripplanner.controller;
 
 public interface IMainController {
 
-    void addLocalization();
-
     void setDuration(int placeId, int hours, int minutes);
+    void startMapsActivity(int id);
 }

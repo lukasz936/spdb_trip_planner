@@ -17,7 +17,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         tools:context="com.tripplanner.view.MapsActivity" />
 
-
     <fragment
         android:id="@+id/place_autocomplete_fragment"
         android:layout_width="match_parent"
@@ -25,7 +24,6 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp"
-        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-        />
+        android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment" />
 
 </RelativeLayout>

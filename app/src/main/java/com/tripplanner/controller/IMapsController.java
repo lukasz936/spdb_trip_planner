@@ -10,6 +10,6 @@ public interface IMapsController {
 
     void selectPlace(Place place, boolean clickedOnMap);
     void addPlace(Place place);
-
     void cancelAddingPlace();
+    void showRoute();
 }

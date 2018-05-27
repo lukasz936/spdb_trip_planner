@@ -106,8 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addLocalization(View v) {
-        startActivityForResult(new Intent(this, MapsActivity.class), 1);
-        overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
+        controller.startMapsActivity(1);
     }
 
     @Override
@@ -167,5 +166,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setDurationLabel(int placeId, int hours, int minutes) {
         ((TextView) views.get(placeId).findViewById(R.id.activityMainRowHours)).setText(String.valueOf(hours));
         ((TextView) views.get(placeId).findViewById(R.id.activityMainRowMins)).setText(String.valueOf(minutes));
+    }
+
+    public void showRoute(View v){
+        controller.startMapsActivity(2);
     }
 }

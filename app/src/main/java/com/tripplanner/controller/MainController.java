@@ -1,7 +1,11 @@
 package com.tripplanner.controller;
 
+import android.content.Intent;
+
+import com.tripplanner.R;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.view.MainActivity;
+import com.tripplanner.view.MapsActivity;
 
 /**
  * Created by Łukasz on 16.05.2018.
@@ -16,12 +20,16 @@ public class MainController implements IMainController {
     }
 
     @Override
-    public void addLocalization() {
-    }
-
-    @Override
     public void setDuration(int placeId, int hours, int minutes) {
         DataManager.getPlace(placeId).setDuration(hours * 60 + minutes);
         view.setDurationLabel(placeId, hours, minutes);
+    }
+
+    @Override
+    public void startMapsActivity(int id) {
+        Intent i = new Intent(view, MapsActivity.class);
+        i.putExtra("id", id);
+        view.startActivityForResult(i, id);
+        view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
     }
 }
