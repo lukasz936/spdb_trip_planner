@@ -8,10 +8,12 @@ import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -19,12 +21,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.tripplanner.R;
 import com.tripplanner.controller.MapsController;
 
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    private final int REQUEST_CODE_PLACEPICKER = 1;
     private GoogleMap mMap;
     private MapsController mapsController;
     private static final float ZOOM_POLAND = (float) 5.5;
@@ -71,8 +76,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
-                    currentPlace = new com.tripplanner.model.Place(latLng);
-                    mapsController.selectPlace(currentPlace, true);
+                    //placePicker
+                    selectPoint(latLng, true);
+                    startPlacePickerActivity(latLng);
                 }
             });
         }
@@ -110,6 +116,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         } else {
             finish();
+        }
+    }
+
+    private void startPlacePickerActivity(LatLng latLng) {
+        PlacePicker.IntentBuilder intentBuilder = new PlacePicker.IntentBuilder();
+        intentBuilder.setLatLngBounds(new LatLngBounds(new LatLng(latLng.latitude-0.005, latLng.longitude-0.005),
+                new LatLng(latLng.latitude+0.005, latLng.longitude+0.005)));
+        // this would only work if you have your Google Places API working
+
+        try {
+            Intent intent = intentBuilder.build(this);
+            startActivityForResult(intent, REQUEST_CODE_PLACEPICKER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected  void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE_PLACEPICKER && resultCode == RESULT_OK) {
+            Place placeSelected = PlacePicker.getPlace(data, this);
+
+            currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(),placeSelected.getName().toString());
+            mapsController.selectPlace(currentPlace, true);
         }
     }
 }

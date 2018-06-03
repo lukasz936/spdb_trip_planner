@@ -21,7 +21,7 @@ import android.widget.NumberPicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.vision.text.Text;
+//import com.google.android.gms.vision.text.Text;
 import com.tripplanner.R;
 import com.tripplanner.controller.MainController;
 import com.tripplanner.model.DataManager;
