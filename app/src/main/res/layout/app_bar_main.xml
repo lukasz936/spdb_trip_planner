@@ -21,7 +21,21 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <include
+        android:id="@+id/include2"
+        layout="@layout/content_main" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddPlace3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="addLunch"
+        android:src="@drawable/ic_lunch"
+        app:borderWidth="0dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddPlace"
@@ -38,6 +52,18 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabShowRoute"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_margin="@dimen/fab_margin"
+        android:background="@color/colorPrimary"
+        android:backgroundTint="@color/colorPrimary"
+        android:onClick="showRoute"
+        android:src="@drawable/ic_show_route"
+        app:borderWidth="0dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabShowRoute2"
+        android:layout_width="140dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_margin="@dimen/fab_margin"

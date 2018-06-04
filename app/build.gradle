@@ -4,6 +4,7 @@ android {
     compileSdkVersion 24
     buildToolsVersion '27.0.3'
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.tripplanner"
         minSdkVersion 15
         targetSdkVersion 24
@@ -28,6 +29,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.google.android.gms:play-services:9.6.1'
     compile 'com.android.support:design:24.2.0'
+    implementation 'com.android.support:multidex:1.0.3'
     testCompile 'junit:junit:4.12'
     //implementation 'com.google.android.gms:play-services:12.0.1'
 }

@@ -109,6 +109,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         controller.startMapsActivity(1);
     }
 
+    public void addLunch(View v) {
+        controller.startLunchActivity(3);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

@@ -89,8 +89,8 @@
                 android:id="@+id/activityMainRowButton"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:layout_weight="13"
                 android:layout_margin="5dp"
+                android:layout_weight="13"
                 android:backgroundTint="@color/colorPrimary"
                 android:src="@mipmap/ic_clock" />
         </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.tripplanner.R;
 import com.tripplanner.model.DataManager;
+import com.tripplanner.view.LunchActivity;
 import com.tripplanner.view.MainActivity;
 import com.tripplanner.view.MapsActivity;
 
@@ -31,5 +32,13 @@ public class MainController implements IMainController {
         i.putExtra("id", id);
         view.startActivityForResult(i, id);
         view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
+    }
+
+    @Override
+    public void startLunchActivity(int id) {
+        Intent i = new Intent(view, LunchActivity.class);
+        i.putExtra("id", id);
+        view.startActivityForResult(i, id);
+        //view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
     }
 }

@@ -8,4 +8,5 @@ public interface IMainController {
 
     void setDuration(int placeId, int hours, int minutes);
     void startMapsActivity(int id);
+    void startLunchActivity(int id);
 }
