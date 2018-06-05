@@ -1,9 +1,7 @@
 package com.tripplanner.controller.googleApi;
 
-import android.provider.ContactsContract;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
 import com.tripplanner.view.MapsActivity;
@@ -22,12 +20,12 @@ public class GoogleApiController {
 
     public void sendRequest(){
         if(DataManager.getPlaces().size()<2){
-            Toast.makeText(view, "Nie wprowadzono wystarczającą liczbę miejsc", Toast.LENGTH_LONG).show();
+            Toast.makeText(view, "Nie wprowadzono wystarczającej liczby miejsc", Toast.LENGTH_LONG).show();
             return;
         }
         String url = createUrl();
         RequestAsyncTask requestAsyncTask = new RequestAsyncTask();
-        requestAsyncTask.execute(url);
+        requestAsyncTask.execute(url, view);
 
     }
 
