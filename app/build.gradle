@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 24
-    buildToolsVersion '27.0.3'
+    buildToolsVersion "27.0.3"
     defaultConfig {
         multiDexEnabled true
         applicationId "com.tripplanner"
@@ -22,7 +22,7 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -31,5 +31,5 @@ dependencies {
     compile 'com.android.support:design:24.2.0'
     implementation 'com.android.support:multidex:1.0.3'
     testCompile 'junit:junit:4.12'
-    //implementation 'com.google.android.gms:play-services:12.0.1'
+
 }
