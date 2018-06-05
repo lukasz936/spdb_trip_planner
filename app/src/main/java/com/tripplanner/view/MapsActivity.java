@@ -55,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
-                public void onPlaceSelected(Place place) {
+                public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
                     currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
                     mapsController.selectPlace(currentPlace, false);
                 }

@@ -4,13 +4,13 @@ android {
     compileSdkVersion 24
     buildToolsVersion "27.0.3"
     defaultConfig {
-        multiDexEnabled true
         applicationId "com.tripplanner"
         minSdkVersion 15
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -21,15 +21,16 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    // implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support.constraint:constraint-layout:1.1.0'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.google.android.gms:play-services:9.6.1'
     compile 'com.android.support:design:24.2.0'
-    implementation 'com.android.support:multidex:1.0.3'
+    //implementation 'com.android.support:multidex:1.0.3'
     testCompile 'junit:junit:4.12'
 
 }

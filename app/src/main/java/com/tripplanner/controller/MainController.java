@@ -43,7 +43,7 @@ public class MainController implements IMainController {
         Intent i = new Intent(view, LunchActivity.class);
         i.putExtra("id", id);
         view.startActivityForResult(i, id);
-        //view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
+        view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
     }
 
     @Override
