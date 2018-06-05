@@ -36,6 +36,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final float ZOOM_POINT = (float) 15;
     private static final float LAT_POLAND = (float) 52.03;
     private static final float LNG_POLAND = (float) 19.27;
+    public static final int ADD_NEW_POSITION = 1;
+    public static final int PREVIEW_POSITION = 2;
+    public static final int SHOW_ROUTE = 3;
     private com.tripplanner.model.Place currentPlace;
     private int mode;
 
@@ -48,7 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         mode = getIntent().getExtras().getInt("id");
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        if(mode == 1){
+        if (mode == ADD_NEW_POSITION) {
             autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
@@ -60,6 +63,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 public void onError(Status status) {
                 }
             });
+        } else if (mode == PREVIEW_POSITION) {
+            autocompleteFragment.getView().setVisibility(View.GONE);
         } else {
             autocompleteFragment.getView().setVisibility(View.GONE);
             mapsController.showRoute();
@@ -72,7 +77,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(new CameraPosition.Builder().target(new LatLng(LAT_POLAND, LNG_POLAND)).zoom(ZOOM_POLAND).build()));
         mMap.getUiSettings().setMapToolbarEnabled(false);
-        if(mode == 1){
+        if (mode == ADD_NEW_POSITION) {
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
@@ -81,6 +86,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     startPlacePickerActivity(latLng);
                 }
             });
+        } else if (mode == PREVIEW_POSITION) {
+            int placeId = getIntent().getExtras().getInt("placeId");
+            mapsController.showPlace(placeId);
         }
     }
 
@@ -94,7 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onBackPressed() {
-        if(mode == 1){
+        if (mode == ADD_NEW_POSITION) {
             if (currentPlace != null) {
                 new AlertDialog.Builder(MapsActivity.this)
                         .setMessage("Czy na pewno chcesz dodać wybrany punkt?")

@@ -1,6 +1,7 @@
 package com.tripplanner.controller;
 
 import android.content.Intent;
+import android.view.View;
 
 import com.tripplanner.R;
 import com.tripplanner.model.DataManager;
@@ -27,9 +28,12 @@ public class MainController implements IMainController {
     }
 
     @Override
-    public void startMapsActivity(int id) {
+    public void startMapsActivity(int id, Integer placeId) {
         Intent i = new Intent(view, MapsActivity.class);
         i.putExtra("id", id);
+        if (id == MapsActivity.PREVIEW_POSITION && placeId != null) {
+            i.putExtra("placeId", placeId);
+        }
         view.startActivityForResult(i, id);
         view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
     }
@@ -40,5 +44,11 @@ public class MainController implements IMainController {
         i.putExtra("id", id);
         view.startActivityForResult(i, id);
         //view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
+    }
+
+    @Override
+    public void removePlace(int placeId) {
+        MainActivity.views.get(placeId).setVisibility(View.GONE);
+        DataManager.removePlace(placeId);
     }
 }

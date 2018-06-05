@@ -3,8 +3,10 @@ package com.tripplanner.view;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainController controller;
     private RelativeLayout placeListLayout;
-    public List<View> views = new ArrayList<>();
+    public static List<View> views = new ArrayList<>();
     private static final int VIEW_ID_OFFSET = 1000000;
 
     @Override
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addLocalization(View v) {
-        controller.startMapsActivity(1);
+        controller.startMapsActivity(MapsActivity.ADD_NEW_POSITION, null);
     }
 
     public void addLunch(View v) {
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((TextView) view.findViewById(R.id.activityMainRowText)).setText(place.getName());
         view.findViewById(R.id.activityMainRowButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View button) {
-                openTimePicker(place.getId(), 1, 0);
+                openMultiOptionWindow(place.getId());
             }
         });
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, 150);
@@ -143,6 +145,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         view.setLayoutParams(params);
         views.add(view);
         placeListLayout.addView(view);
+    }
+
+    public void openMultiOptionWindow(final int placeId){
+        CharSequence options[] = new CharSequence[]{"Czas pobytu", "Podgląd na mapie", "Usuń"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Wybierz");
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case 0: openTimePicker(placeId, 1, 0);
+                            break;
+                    case 1: controller.startMapsActivity(MapsActivity.PREVIEW_POSITION, placeId);
+                            break;
+                    case 2: controller.removePlace(placeId);
+                }
+            }
+        });
+        builder.show();
     }
 
     public void openTimePicker(final int placeId, int currentHours, int currentMinutes) {
@@ -173,6 +194,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void showRoute(View v){
-        controller.startMapsActivity(2);
+        controller.startMapsActivity(MapsActivity.SHOW_ROUTE, null);
     }
 }

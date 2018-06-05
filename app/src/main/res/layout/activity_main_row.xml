@@ -92,7 +92,7 @@
                 android:layout_margin="5dp"
                 android:layout_weight="13"
                 android:backgroundTint="@color/colorPrimary"
-                android:src="@mipmap/ic_clock" />
+                android:src="@mipmap/ic_edit" />
         </LinearLayout>
 
 

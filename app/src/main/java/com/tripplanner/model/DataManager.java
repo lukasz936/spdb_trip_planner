@@ -1,6 +1,7 @@
 package com.tripplanner.model;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -10,21 +11,34 @@ import java.util.List;
 public final class DataManager {
 
     private static List<Place> places = new ArrayList<>();
+    private static int maxPlaceId = 0;
 
     public static void addPlace(Place place) {
-        place.setId(places.size());
+        place.setId(maxPlaceId);
         places.add(place);
+        maxPlaceId++;
     }
 
     public static void removePlace(int id) {
-        places.remove(id);
+        for (Iterator<Place> iterator = places.iterator(); iterator.hasNext();) {
+            Place place = iterator.next();
+            if (place.getId() == id) {
+                iterator.remove();
+            }
+        }
     }
 
-    public static List<Place> getPlaces(){
+    public static List<Place> getPlaces() {
         return places;
     }
 
-    public static Place getPlace(int id){
-        return places.get(id);
+    public static Place getPlace(int id) {
+        for (Iterator<Place> iterator = places.iterator(); iterator.hasNext();) {
+            Place place = iterator.next();
+            if (place.getId() == id) {
+                return place;
+            }
+        }
+        return null;
     }
 }

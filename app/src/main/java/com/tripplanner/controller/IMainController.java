@@ -7,6 +7,7 @@ package com.tripplanner.controller;
 public interface IMainController {
 
     void setDuration(int placeId, int hours, int minutes);
-    void startMapsActivity(int id);
+    void startMapsActivity(int id, Integer placeId);
+    void removePlace(int placeId);
     void startLunchActivity(int id);
 }

@@ -49,4 +49,8 @@ public class MapsController implements IMapsController {
         googleApiController.sendRequest();
     }
 
+    @Override
+    public void showPlace(int placeId) {
+        view.selectPoint(DataManager.getPlace(placeId).getLatLng(), true);
+    }
 }

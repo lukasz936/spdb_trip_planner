@@ -12,4 +12,5 @@ public interface IMapsController {
     void addPlace(Place place);
     void cancelAddingPlace();
     void showRoute();
+    void showPlace(int placeId);
 }
