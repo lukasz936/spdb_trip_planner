@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tripplanner.R;
@@ -52,7 +54,8 @@ import static com.google.android.gms.location.places.Place.TYPE_FOOD;
 import static com.google.android.gms.location.places.Place.TYPE_RESTAURANT;
 
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnMarkerClickListener {
 
     private final int REQUEST_CODE_PLACEPICKER = 1;
     private GoogleMap mMap;
@@ -132,6 +135,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             int placeId = getIntent().getExtras().getInt("placeId");
             mapsController.showPlace(placeId);
         }
+
+        mMap.setOnMarkerClickListener(this);
+
     }
 
     public void selectPoint(LatLng latLng, boolean animate) {
@@ -223,7 +229,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, ZOOM_POINT));
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            mMap.addMarker(new MarkerOptions().title(String.valueOf(i)).position(DataManager.getPlaces().get(i).getLatLng()));
+            mMap.addMarker(new MarkerOptions().position(DataManager.getPlaces().get(i).getLatLng()));
         }
 
         PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(13);
@@ -254,3 +260,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         alertDialog.show();
     }
 }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        String[] items = new String[5];
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Infprmacje o odcinku trasy:");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                // Do something with the selection
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+        return false;
+    }
+
+}
+
+
+
