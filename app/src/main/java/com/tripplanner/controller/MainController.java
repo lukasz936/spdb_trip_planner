@@ -8,7 +8,6 @@ import com.tripplanner.model.DataManager;
 import com.tripplanner.view.LunchActivity;
 import com.tripplanner.view.MainActivity;
 import com.tripplanner.view.MapsActivity;
-
 /**
  * Created by Łukasz on 16.05.2018.
  */
