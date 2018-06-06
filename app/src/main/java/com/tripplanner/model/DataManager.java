@@ -12,6 +12,8 @@ public final class DataManager {
 
     private static List<Place> places = new ArrayList<>();
     private static int maxPlaceId = 0;
+    private static RouteParam routeParam = new RouteParam(new ArrayList<Place>());
+
 
     public static void addPlace(Place place) {
         place.setId(maxPlaceId);
@@ -40,5 +42,9 @@ public final class DataManager {
             }
         }
         return null;
+    }
+
+    public static RouteParam getRouteParam() {
+        return routeParam;
     }
 }

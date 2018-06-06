@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.tripplanner.R;
 import com.tripplanner.controller.LunchController;
+import com.tripplanner.model.DataManager;
 import com.tripplanner.model.LunchOption;
 import com.tripplanner.model.RouteParam;
 //import com.tripplanner.model.RouteParam;
@@ -69,6 +70,13 @@ public class LunchActivity extends AppCompatActivity {
                 openTimePicker(1,0,2);
             }
         });
+
+        TextView SetHourTextView = (TextView) findViewById(R.id.StartLunchTextView);
+        SetHourTextView.setText(DataManager.getRouteParam().getRestaurant().getStartDate().toString().substring(11,16));
+
+
+        TextView SetDurationTextView = (TextView) findViewById(R.id.LunchdurationTextView);
+        SetDurationTextView.setText( String.valueOf(DataManager.getRouteParam().getRestaurant().getDuration()/60) + " h " + String.valueOf(DataManager.getRouteParam().getRestaurant().getDuration()%60) + " m " );
     }
 
 
@@ -80,17 +88,17 @@ public class LunchActivity extends AppCompatActivity {
         switch(view.getId()) {
             case R.id.radioButton:
                 if (checked)
-                    RouteParam.setLunchOption(LunchOption.exactPlace);
+                    DataManager.getRouteParam().setLunchOption(LunchOption.exactPlace);
                     controller.startMapsActivity(MapsActivity.ADD_NEW_LUNCH_PLACE);
                 break;
             case R.id.radioButton2:
                 if (checked)
-                    RouteParam.setLunchOption(LunchOption.placeType);
+                    DataManager.getRouteParam().setLunchOption(LunchOption.placeType);
                     openPlacesListDialog();
                     break;
             case R.id.radioButton3:
                 if (checked)
-                    RouteParam.setLunchOption(LunchOption.anyPlace);
+                    DataManager.getRouteParam().setLunchOption(LunchOption.anyPlace);
                     break;
         }
     }
@@ -115,8 +123,10 @@ public class LunchActivity extends AppCompatActivity {
             dialog.findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   //controller.setStartHour(numberPickerHour.getValue(), numberPickerMin.getValue());
-                    dialog.dismiss();
+                   controller.setStartHour(numberPickerHour.getValue(), numberPickerMin.getValue());
+                   TextView tv = (TextView) findViewById(R.id.StartLunchTextView);
+                   tv.setText(DataManager.getRouteParam().getRestaurant().getStartDate().toString().substring(11,16));
+                   dialog.dismiss();
                 }
             });
         }
@@ -124,7 +134,9 @@ public class LunchActivity extends AppCompatActivity {
             dialog.findViewById(R.id.buttonOK).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //controller.setDuration(numberPickerHour.getValue(), numberPickerMin.getValue());
+                    controller.setDuration(numberPickerHour.getValue(), numberPickerMin.getValue());
+                    TextView tv = (TextView) findViewById(R.id.LunchdurationTextView);
+                    tv.setText( String.valueOf(DataManager.getRouteParam().getRestaurant().getDuration()/60) + " h " + String.valueOf(DataManager.getRouteParam().getRestaurant().getDuration()%60) + " m " );
                     dialog.dismiss();
                 }
             });
@@ -133,7 +145,7 @@ public class LunchActivity extends AppCompatActivity {
     }
 
 
-    @Override
+/*    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MapsActivity.ADD_NEW_LUNCH_PLACE) {
@@ -142,24 +154,24 @@ public class LunchActivity extends AppCompatActivity {
 
             }
         }
-    }
+    }*/
 
     public void openPlacesListDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(LunchActivity.this);
         builder.setTitle("Wybierz typ restauracji");
-        String[] restaurants = {"Burger King", "Da Grasso", "Dominium", "KFC", "McDonald's", "Pizza Hut", "Sphinx", "SUBWAY", "TelePizza"};
-        int checkedItem = 0;
+        final String[] restaurants = {"Burger King", "Da Grasso", "Dominium", "KFC", "McDonald's", "Pizza Hut", "Sphinx", "SUBWAY", "TelePizza"};
+        final int checkedItem = 0;
         builder.setSingleChoiceItems(restaurants, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // user checked an item
+                DataManager.getRouteParam().setRestaurantName(restaurants[which]);
             }
         });
 
         builder.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // user clicked OK
+
             }
         });
         builder.setNegativeButton("Cofnij", null);

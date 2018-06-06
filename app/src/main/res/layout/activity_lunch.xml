@@ -10,10 +10,10 @@
         android:id="@+id/textView_setHourTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="70dp"
         android:text="TextView"
         android:textColor="@color/black"
-        android:textSize="15sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton_StartLunchHour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -34,7 +34,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView_setDuration"
         app:layout_constraintStart_toStartOf="@+id/textView_setHourTitle"
         app:layout_constraintTop_toBottomOf="@+id/textView_setHourTitle"
-        app:srcCompat="@mipmap/ic_clock" />
+        app:srcCompat="@drawable/ic_clock_1" />
 
     <TextView
         android:id="@+id/textView_setDuration"
@@ -44,6 +44,7 @@
         android:layout_marginTop="10dp"
         android:text="TextView"
         android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +64,7 @@
         app:layout_constraintBottom_toTopOf="@+id/textView_setPlace"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_setDuration"
-        app:srcCompat="@mipmap/ic_clock" />
+        app:srcCompat="@drawable/ic_clock_1" />
 
     <TextView
         android:id="@+id/textView_setPlace"
@@ -73,6 +74,7 @@
         android:layout_marginTop="10dp"
         android:text="TextView"
         android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/radioGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -97,7 +99,8 @@
             android:layout_height="wrap_content"
             android:onClick="onRadioButtonClicked"
             android:textColor="@color/black"
-            tools:text="@string/set_place_radio_button_1" />
+            tools:text="@string/set_place_radio_button_1"
+            android:textSize="15sp"/>
         <!--android:layout_marginBottom="10dp"
         android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
@@ -117,7 +120,8 @@
             android:layout_height="wrap_content"
             android:onClick="onRadioButtonClicked"
             android:textColor="@color/black"
-            tools:text="@string/set_place_radio_button_2" />
+            tools:text="@string/set_place_radio_button_2"
+            android:textSize="15sp"/>
         <!-- android:layout_marginLeft="16dp"
          android:layout_marginStart="16dp"
          android:layout_weight="1"
@@ -135,7 +139,8 @@
             android:checked="true"
             android:onClick="onRadioButtonClicked"
             android:textColor="@color/black"
-            tools:text="@string/set_place_radio_button_3" />
+            tools:text="@string/set_place_radio_button_3"
+            android:textSize="15sp"/>
         <!-- android:layout_marginBottom="8dp"
          android:layout_marginLeft="16dp"
          android:layout_marginStart="16dp"
@@ -148,5 +153,29 @@
         app:layout_constraintStart_toStartOf="parent"-->
 
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/StartLunchTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_setDuration"
+        app:layout_constraintStart_toEndOf="@+id/floatingActionButton_StartLunchHour" />
+
+    <TextView
+        android:id="@+id/LunchdurationTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginStart="40dp"
+        android:text="TextView"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView_setPlace"
+        app:layout_constraintStart_toEndOf="@+id/floatingActionButton" />
 
 </android.support.constraint.ConstraintLayout>

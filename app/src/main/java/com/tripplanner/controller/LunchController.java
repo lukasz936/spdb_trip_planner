@@ -3,6 +3,7 @@ package com.tripplanner.controller;
 import android.content.Intent;
 
 import com.tripplanner.R;
+import com.tripplanner.model.DataManager;
 import com.tripplanner.view.LunchActivity;
 import com.tripplanner.view.MapsActivity;
 import com.tripplanner.model.RouteParam;
@@ -26,13 +27,13 @@ public class LunchController implements ILunchController {
 
     @Override
     public void setDuration(int hours, int minutes) {
-        RouteParam.getRestaurant().setDuration(hours * 60 + minutes);
+        DataManager.getRouteParam().getRestaurant().setDuration(hours * 60 + minutes);
         //view.setDurationLabel(placeId, hours, minutes);
     }
 
     @Override
     public void setStartHour(int hours, int minutes) {
-        RouteParam.getRestaurant().setStartDate(new Date(2018, 1,1, hours, minutes));
+        DataManager.getRouteParam().getRestaurant().setStartDate(new Date(2018, 1,1, hours, minutes));
         //view.setDurationLabel(placeId, hours, minutes);
     }
 }

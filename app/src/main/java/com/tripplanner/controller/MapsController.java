@@ -41,7 +41,7 @@ public class MapsController implements IMapsController {
 
     @Override
     public void addRestaurant(Place place){
-        RouteParam.setRestaurant(place);
+        DataManager.getRouteParam().setRestaurant(place);
         view.setResult(Activity.RESULT_OK, new Intent());
         view.finish();
     }

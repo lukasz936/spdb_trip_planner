@@ -17,6 +17,8 @@ public class Place {
     //Boolean lunch_flag;
     //Date userStartDateLunch;
 
+    public Place(){}
+
     public Place(LatLng latLng) {
         this.latLng = latLng;
         this.name = String.format("%.2f", latLng.latitude) + "   " + String.format("%.2f", latLng.longitude);
