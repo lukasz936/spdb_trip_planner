@@ -19,6 +19,7 @@ import android.support.v7.media.MediaRouteSelector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -73,6 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int SHOW_ROUTE = 3;
     public static final int ADD_NEW_LUNCH_PLACE = 4;
     private Map<TravelMode, String> travelModeDictionary = new HashMap<>();
+    private List<Marker> listOfMarkers = new ArrayList<>();
 
     private com.tripplanner.model.Place currentPlace;
     private int mode;
@@ -280,7 +282,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-        String[] items = new String[5];
+        String[] items = new String[4];
+        TravelMode travelMode = TravelMode.WALKING;
+        String travelMode_pl = "Pieszo";
+        for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
+            if(marker.getPosition().latitude == DataManager.getPlaces().get(i).getLatLng().latitude && marker.getPosition().longitude == DataManager.getPlaces().get(i).getLatLng().longitude){
+                items[0] = DataManager.getPlaces().get(i).getName();
+                switch (travelMode) {
+                    case DRIVING: travelMode_pl = "Samochód";
+                    case TRANSIT: travelMode_pl = "Komunikacja";
+                    case WALKING: travelMode_pl = "Pieszo";
+                }
+                items[1] = "Typ transport: " + travelMode_pl;
+                items[2] = "Czas odcinka: " + DataManager.getRoute().getSections().get(i).getDuration()/60 + " h " + DataManager.getRoute().getSections().get(i).getDuration()%60 + " m ";
+                items[3] = "Dystans: " + DataManager.getRoute().getSections().get(i).getDistance()/1000 + " km " + DataManager.getRoute().getSections().get(i).getDistance()%1000 + " m ";
+                break;
+            }
+        }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Informacje o odcinku trasy:");
@@ -289,7 +307,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // Do something with the selection
                 dialog.dismiss();
             }
+
         });
+
+        String positive = "Pieszo";
+        String negative = "Samochód";
+        switch(travelMode) {
+            case DRIVING : {
+                positive = "Pieszo";
+                negative = "Komunikacja";
+                break;
+            }
+            case TRANSIT: {
+                positive = "Pieszo";
+                negative = "Samochód";
+                break;
+            }
+            case WALKING: {
+                positive = "Samochód";
+                negative = "Komunikacja";
+                break;
+            }
+        }
+        builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        builder.setNegativeButton(negative, null);
         builder.show();
         return false;
     }
