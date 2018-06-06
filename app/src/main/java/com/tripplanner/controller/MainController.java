@@ -35,7 +35,7 @@ public class MainController implements IMainController {
         if (id == MapsActivity.PREVIEW_POSITION && placeId != null) {
             i.putExtra("placeId", placeId);
         }
-        if( id == MapsActivity.SHOW_ROUTE || id ==MapsActivity.ADD_NEW_POSITION){
+        if( id == MapsActivity.SHOW_ROUTE || id == MapsActivity.ADD_NEW_POSITION){
             if(id == MapsActivity.SHOW_ROUTE && DataManager.userLocation == null){
                 Toast.makeText(view, "Lokalizacja użytkownika nie jest określona", Toast.LENGTH_LONG).show();
                 return;

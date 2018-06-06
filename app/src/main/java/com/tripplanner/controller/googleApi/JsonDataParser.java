@@ -28,7 +28,6 @@ public class JsonDataParser {
             return null;
         }
         JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
-        JSONObject jsonOverviewPolyline = jsonRoute.getJSONObject("overview_polyline");
         JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
         List<Section> sections = new ArrayList<>();
         for (int i = 0; i < jsonLegs.length(); ++i) {
@@ -50,7 +49,6 @@ public class JsonDataParser {
             section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
             section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
             section.setPolylines(polylines);
-            section.setTravelMode(TravelMode.WALKING);
             sections.add(section);
         }
         return new Route(sections, DataManager.getPlaces());

@@ -8,6 +8,7 @@ import com.tripplanner.model.Place;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.RouteParam;
 import com.tripplanner.model.RouteRequestData;
+import com.tripplanner.model.Section;
 import com.tripplanner.model.TravelMode;
 import com.tripplanner.view.MapsActivity;
 
@@ -33,7 +34,8 @@ public class GoogleApiController {
         }
         DataManager.setRouteRequestData(new RouteRequestData());
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(), createViasExceptPlace(i));
+            String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(),
+                    createViasExceptPlace(i), DataManager.getRouteParam().getTravelMode());
             RequestAsyncTask requestAsyncTask = new RequestAsyncTask();
             requestAsyncTask.execute(url, RouteRequestData.FIND_ROUTE, this);
         }
@@ -52,6 +54,7 @@ public class GoogleApiController {
     public void chooseTheBestRoute() {
         int minDuration = 1000000000;
         int minId = 0;
+        List<Route> routes =  DataManager.getRouteRequestData().routes;
         for (int i = 0; i < DataManager.getRouteRequestData().routes.size(); ++i) {
             int currentDuration = DataManager.getRouteRequestData().routes.get(i).getDuration();
             if (currentDuration < minDuration) {
@@ -59,14 +62,22 @@ public class GoogleApiController {
                 minId = i;
             }
         }
-        DataManager.setRoute(DataManager.getRouteRequestData().routes.get(minId));
+        Route route = DataManager.getRouteRequestData().routes.get(minId);
+        setTravelTypeForSections(route, DataManager.getRouteParam().getTravelMode());
+        DataManager.setRoute(route);
     }
 
-    private String createRouteUrl(LatLng origin, LatLng destination, List<LatLng> vias) {
+    private void setTravelTypeForSections(Route route, TravelMode travelMode) {
+        for (Section section : route.getSections()) {
+            section.setTravelMode(travelMode);
+        }
+    }
+
+    private String createRouteUrl(LatLng origin, LatLng destination, List<LatLng> vias, TravelMode travelMode) {
         String originStr = "origin=" + origin.latitude + "," + origin.longitude;
         String destinationStr = "destination=" + destination.latitude + "," + destination.longitude;
         String sensor = "sensor=false";
-        String mode = "mode=" + DataManager.getRouteParam().getTravelMode().name().toLowerCase();
+        String mode = "mode=" + travelMode.name().toLowerCase();
         String waypoints = "waypoints=optimize:true";
         for (LatLng latLng : vias) {
             waypoints += "|" + latLng.latitude + "," + latLng.longitude;
