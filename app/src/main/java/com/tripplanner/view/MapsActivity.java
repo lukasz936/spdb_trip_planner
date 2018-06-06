@@ -115,6 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else if (mode == PREVIEW_POSITION) {
             autocompleteFragment.getView().setVisibility(View.GONE);
         } else {
+            findViewById(R.id.fabOpenRouteInfo).setVisibility(View.VISIBLE);
             autocompleteFragment.getView().setVisibility(View.GONE);
             mapsController.showRoute();
         }
@@ -275,7 +276,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     "   " + DataManager.getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getPlaces().get(i).getDuration() % 60 + " min" +
                     "\n" + format.format(calendar.getTime()) + " - ";
             calendar.add(Calendar.MINUTE, DataManager.getPlaces().get(i).getDuration());
-            placeInfo +=  format.format(calendar.getTime());
+            placeInfo += format.format(calendar.getTime());
             infoList.add(sectionInfo);
             infoList.add(placeInfo);
         }
@@ -297,16 +298,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         TravelMode travelMode = TravelMode.WALKING;
         String travelMode_pl = "Pieszo";
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            if(marker.getPosition().latitude == DataManager.getPlaces().get(i).getLatLng().latitude && marker.getPosition().longitude == DataManager.getPlaces().get(i).getLatLng().longitude){
+            if (marker.getPosition().latitude == DataManager.getPlaces().get(i).getLatLng().latitude && marker.getPosition().longitude == DataManager.getPlaces().get(i).getLatLng().longitude) {
                 items[0] = DataManager.getPlaces().get(i).getName();
                 switch (travelMode) {
-                    case DRIVING: travelMode_pl = "Samochód";
-                    case TRANSIT: travelMode_pl = "Komunikacja";
-                    case WALKING: travelMode_pl = "Pieszo";
+                    case DRIVING:
+                        travelMode_pl = "Samochód";
+                    case TRANSIT:
+                        travelMode_pl = "Komunikacja";
+                    case WALKING:
+                        travelMode_pl = "Pieszo";
                 }
                 items[1] = "Typ transport: " + travelMode_pl;
-                items[2] = "Czas odcinka: " + DataManager.getRoute().getSections().get(i).getDuration()/60 + " h " + DataManager.getRoute().getSections().get(i).getDuration()%60 + " m ";
-                items[3] = "Dystans: " + DataManager.getRoute().getSections().get(i).getDistance()/1000 + " km " + DataManager.getRoute().getSections().get(i).getDistance()%1000 + " m ";
+                items[2] = "Czas odcinka: " + DataManager.getRoute().getSections().get(i).getDuration() / 60 + " h " + DataManager.getRoute().getSections().get(i).getDuration() % 60 + " m ";
+                items[3] = "Dystans: " + DataManager.getRoute().getSections().get(i).getDistance() / 1000 + " km " + DataManager.getRoute().getSections().get(i).getDistance() % 1000 + " m ";
                 break;
             }
         }
@@ -323,8 +327,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String positive = "Pieszo";
         String negative = "Samochód";
-        switch(travelMode) {
-            case DRIVING : {
+        switch (travelMode) {
+            case DRIVING: {
                 positive = "Pieszo";
                 negative = "Komunikacja";
                 break;
