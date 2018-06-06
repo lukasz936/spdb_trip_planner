@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.Route;
+import com.tripplanner.model.Step;
 import com.tripplanner.view.MapsActivity;
 
 import org.json.JSONArray;
@@ -75,22 +76,44 @@ public class RequestAsyncTask extends AsyncTask {
         //parserTask.execute((String) o);
     }
 
-    private List<Route> parseJson(String data) throws JSONException {
+    private Route parseJson(String data) throws JSONException {
         if (data == null) {
             return null;
         }
-        List<Route> routes = new ArrayList<>();
+        List<Step> steps = new ArrayList<>();
         JSONObject jsonData = new JSONObject(data);
         JSONArray jsonRoutes = jsonData.getJSONArray("routes");
-        for (int i = 0; i < jsonRoutes.length(); i++) {
-            JSONObject jsonRoute = jsonRoutes.getJSONObject(i);
-            Route route = new Route();
-
-            JSONObject jsonOverviewPolyline = jsonRoute.getJSONObject("overview_polyline");
-            route.points = decodePolyLine(jsonOverviewPolyline.getString("points"));
-            routes.add(route);
+        if (jsonRoutes.length() == 0) {
+            return null;
         }
-        return routes;
+        Route route = new Route();
+        JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
+        JSONObject jsonOverviewPolyline = jsonRoute.getJSONObject("overview_polyline");
+        JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
+        if (jsonLegs.length() == 0) {
+            return null;
+        }
+        JSONObject jsonLeg = jsonLegs.getJSONObject(0);
+        JSONObject jsonLegDistance = jsonLeg.getJSONObject("distance");
+        JSONObject jsonLegDuration = jsonLeg.getJSONObject("duration");
+        JSONArray jsonSteps = jsonLeg.getJSONArray("steps");
+        for (int i = 0; i < jsonSteps.length(); i++) {
+            JSONObject jsonStep = jsonSteps.getJSONObject(i);
+            JSONObject jsonDistance = jsonStep.getJSONObject("distance");
+            JSONObject jsonDuration = jsonStep.getJSONObject("duration");
+            JSONObject jsonEndLocation = jsonStep.getJSONObject("end_location");
+            JSONObject jsonStartLocation = jsonStep.getJSONObject("start_location");
+            Step step = new Step();
+            step.setDistance(jsonDistance.getDouble("value"));
+            step.setDuration(jsonDuration.getInt("value"));
+            step.setEndLocation(new LatLng(jsonEndLocation.getDouble("lat"), jsonEndLocation.getDouble("lng")));
+            step.setStartLocation(new LatLng(jsonStartLocation.getDouble("lat"), jsonStartLocation.getDouble("lng")));
+            steps.add(step);
+        }
+        route.setPoints(decodePolyLine(jsonOverviewPolyline.getString("points")));
+        route.setDistance(jsonLegDistance.getDouble("value"));
+        route.setDuration(jsonLegDuration.getInt("value"));
+        return route;
     }
 
     private List<LatLng> decodePolyLine(final String poly) {

@@ -3,6 +3,7 @@ package com.tripplanner.controller;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.controller.googleApi.GoogleApiController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
@@ -59,6 +60,10 @@ public class MapsController implements IMapsController {
 
     @Override
     public void showPlace(int placeId) {
-        view.selectPoint(DataManager.getPlace(placeId).getLatLng(), true);
+        view.selectPoint(DataManager.getPlaceById(placeId).getLatLng(), true);
+    }
+
+    public void updateLocation(LatLng latLng){
+        DataManager.userLocation = latLng;
     }
 }

@@ -18,8 +18,8 @@ public class GoogleApiController {
         this.view = view;
     }
 
-    public void sendRequest(){
-        if(DataManager.getPlaces().size()<2){
+    public void sendRequest() {
+        if (DataManager.getPlaces().size() < 2) {
             Toast.makeText(view, "Nie wprowadzono wystarczającej liczby miejsc", Toast.LENGTH_LONG).show();
             return;
         }
@@ -31,13 +31,16 @@ public class GoogleApiController {
 
 
     private String createUrl() {
-        Place originPlace = DataManager.getPlace(0);
-        Place destinationPlace = DataManager.getPlace(DataManager.getPlaces().size()-1);
-        String origin = "origin=" + originPlace.getLatLng().latitude + "," + originPlace.getLatLng().longitude;
+        Place destinationPlace = DataManager.getPlaceById(DataManager.getPlaces().size() - 1);
+            String origin = "origin=" + DataManager.userLocation.latitude + "," + DataManager.userLocation.longitude;
         String destination = "destination=" + destinationPlace.getLatLng().latitude + "," + destinationPlace.getLatLng().longitude;
         String sensor = "sensor=false";
-        String mode = "mode=driving";
-        String parameters = origin + "&" + destination + "&" + sensor + "&" + mode;
+        String mode = "mode=walking";
+        String waypoints = "waypoints=optimize:true";
+        for (int i = 0; i < DataManager.getPlaces().size() - 1; i++) {
+            waypoints += "|" + DataManager.getPlaces().get(i).getLatLng().latitude + "," + DataManager.getPlaces().get(i).getLatLng().longitude;
+        }
+        String parameters = origin + "&" + destination + "&" + waypoints + "&" + sensor + "&" + mode;
         String output = "json";
         return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
     }

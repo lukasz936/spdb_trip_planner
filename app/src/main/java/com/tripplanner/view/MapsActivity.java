@@ -34,6 +34,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.tripplanner.R;
 import com.tripplanner.controller.MapsController;
+import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Route;
 
 import java.util.List;
@@ -92,6 +93,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMapToolbarEnabled(false);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location arg0) {
+                    mapsController.updateLocation(new LatLng(arg0.getLatitude(), arg0.getLongitude()));
+                }
+            });
         }
         if (mode == ADD_NEW_POSITION || mode == ADD_NEW_LUNCH_PLACE) {
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
@@ -138,9 +145,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 mapsController.cancelAddingPlace();
             }
-        }
-        else if(mode == ADD_NEW_LUNCH_PLACE){
-            if (currentPlace != null){
+        } else if (mode == ADD_NEW_LUNCH_PLACE) {
+            if (currentPlace != null) {
                 new AlertDialog.Builder(MapsActivity.this)
                         .setMessage("Czy na pewno chcesz dodać wybraną restaurację?")
                         .setNegativeButton("Nie", new DialogInterface.OnClickListener() {
@@ -159,8 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 mapsController.cancelAddingPlace();
             }
-        }
-        else {
+        } else {
             finish();
         }
     }
@@ -189,30 +194,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void showRoute(List<Route> routes) {
-        for (Route route : routes) {
-           /* mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(route.startLocation, 16));
-            ((TextView) findViewById(R.id.tvDuration)).setText(route.duration.text);
-            ((TextView) findViewById(R.id.tvDistance)).setText(route.distance.text);*/
+    public void showRoute(Route route) {
 
-           /*mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.start_blue))
-                    .title(route.startAddress)
-                    .position(route.startLocation));
-            destinationMarkers.add(mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.end_green))
-                    .title(route.endAddress)
-                    .position(route.endLocation)));*/
-
-            PolylineOptions polylineOptions = new PolylineOptions().
-                    geodesic(true).
-                    color(Color.BLUE).
-                    width(10);
-
-            for (int i = 0; i < route.points.size(); i++)
-                polylineOptions.add(route.points.get(i));
-
-            mMap.addPolyline(polylineOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, 16));
+        for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
+            mMap.addMarker(new MarkerOptions().title(String.valueOf(i)).position(DataManager.getPlaces().get(i).getLatLng()));
         }
+
+        PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(10);
+
+        for (int i = 0; i < route.points.size(); i++)
+            polylineOptions.add(route.points.get(i));
+
+        mMap.addPolyline(polylineOptions);
     }
 }
