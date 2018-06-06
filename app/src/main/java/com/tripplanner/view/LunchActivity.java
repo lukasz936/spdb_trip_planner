@@ -1,12 +1,15 @@
 package com.tripplanner.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -83,6 +86,7 @@ public class LunchActivity extends AppCompatActivity {
             case R.id.radioButton2:
                 if (checked)
                     RouteParam.setLunchOption(LunchOption.placeType);
+                    openPlacesListDialog();
                     break;
             case R.id.radioButton3:
                 if (checked)
@@ -139,6 +143,32 @@ public class LunchActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void openPlacesListDialog(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(LunchActivity.this);
+        builder.setTitle("Wybierz typ restauracji");
+        String[] restaurants = {"Burger King", "Da Grasso", "Dominium", "KFC", "McDonald's", "Pizza Hut", "Sphinx", "SUBWAY", "TelePizza"};
+        int checkedItem = 0;
+        builder.setSingleChoiceItems(restaurants, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // user checked an item
+            }
+        });
+
+        builder.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // user clicked OK
+            }
+        });
+        builder.setNegativeButton("Cofnij", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 }
+
+
 
 
