@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         placeListLayout = (RelativeLayout) findViewById(R.id.mainPlaceList);
         controller = new MainController(this);
         getLocationPermission();
+        DataManager.init();
     }
 
     @Override
@@ -90,11 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-
     private void getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
@@ -160,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void addViewItem(final Place place) {
         LayoutInflater inflater = LayoutInflater.from(getApplicationContext());
         View view = inflater.inflate(R.layout.activity_main_row, null, false);
-        view.setId(DataManager.getPlaces().size() + VIEW_ID_OFFSET);
+        view.setId(DataManager.getMaxPlaceId() + VIEW_ID_OFFSET);
         ((TextView) view.findViewById(R.id.activityMainRowText)).setText(place.getName());
         view.findViewById(R.id.activityMainRowButton).setOnClickListener(new View.OnClickListener() {
             public void onClick(View button) {
@@ -171,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (DataManager.getPlaces().size() == 0) {
             params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
         } else {
-            params.addRule(RelativeLayout.BELOW, DataManager.getPlaces().size() + VIEW_ID_OFFSET - 1);
+            params.addRule(RelativeLayout.BELOW, DataManager.getMaxPlaceId() + VIEW_ID_OFFSET - 1);
         }
         params.setMargins(1, 5, 1, 5);
         view.setLayoutParams(params);

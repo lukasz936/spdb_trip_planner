@@ -22,7 +22,7 @@ public class MainController implements IMainController {
 
     @Override
     public void setDuration(int placeId, int hours, int minutes) {
-        DataManager.getPlace(placeId).setDuration(hours * 60 + minutes);
+        DataManager.getPlaceById(placeId).setDuration(hours * 60 + minutes);
         view.setDurationLabel(placeId, hours, minutes);
     }
 
@@ -48,6 +48,7 @@ public class MainController implements IMainController {
     @Override
     public void removePlace(int placeId) {
         MainActivity.views.get(placeId).setVisibility(View.GONE);
-        DataManager.removePlace(placeId);
+        DataManager.removePlaceById(placeId);
     }
+
 }

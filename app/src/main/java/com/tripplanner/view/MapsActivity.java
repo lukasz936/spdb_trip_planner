@@ -92,6 +92,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setMapToolbarEnabled(false);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
+            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+                @Override
+                public void onMyLocationChange(Location arg0) {
+                    mapsController.updateLocation(new LatLng(arg0.getLatitude(), arg0.getLongitude()));
+                }
+            });
         }
         if (mode == ADD_NEW_POSITION || mode == ADD_NEW_LUNCH_PLACE) {
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
