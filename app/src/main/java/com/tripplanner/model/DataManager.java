@@ -21,7 +21,8 @@ public final class DataManager {
         addPlace(new Place(new LatLng(52.5325521, 21.2061136), "xdd2"));
         addPlace(new Place(new LatLng(52.8325521, 21.4061136), "xdd3"));
         addPlace(new Place(new LatLng(52.2675521, 21.8061136), "xdd4"));
-
+        addPlace(new Place(new LatLng(52.445941, 20.993381), "xdd5"));
+        addPlace(new Place(new LatLng(52.176502, 21.066162), "xdd6"));
     }
 
     public static void addPlace(Place place) {

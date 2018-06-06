@@ -38,7 +38,7 @@ public class GoogleApiController {
         String mode = "mode=walking";
         String waypoints = "waypoints=optimize:true";
         for (int i = 0; i < DataManager.getPlaces().size() - 1; i++) {
-            waypoints += "|via:" + DataManager.getPlaces().get(i).getLatLng().latitude + "," + DataManager.getPlaces().get(i).getLatLng().longitude;
+            waypoints += "|" + DataManager.getPlaces().get(i).getLatLng().latitude + "," + DataManager.getPlaces().get(i).getLatLng().longitude;
         }
         String parameters = origin + "&" + destination + "&" + waypoints + "&" + sensor + "&" + mode;
         String output = "json";

@@ -1,7 +1,9 @@
 package com.tripplanner.controller;
 
 import android.content.Intent;
+import android.provider.Settings;
 import android.view.View;
+import android.widget.Toast;
 
 import com.tripplanner.R;
 import com.tripplanner.model.DataManager;
@@ -33,6 +35,12 @@ public class MainController implements IMainController {
         if (id == MapsActivity.PREVIEW_POSITION && placeId != null) {
             i.putExtra("placeId", placeId);
         }
+        if( id == MapsActivity.SHOW_ROUTE || id ==MapsActivity.ADD_NEW_POSITION){
+            if(!isGpsOn()){
+                Toast.makeText(view, "Aplikacja wymaga lokalizacji użytkownika. Proszę włączyć GPS", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
         view.startActivityForResult(i, id);
         view.overridePendingTransition(R.anim.forward_enter, R.anim.forward_exit);
     }
@@ -49,6 +57,17 @@ public class MainController implements IMainController {
     public void removePlace(int placeId) {
         MainActivity.views.get(placeId).setVisibility(View.GONE);
         DataManager.removePlaceById(placeId);
+    }
+
+    public boolean isGpsOn(){
+        try {
+            int off = Settings.Secure.getInt(view.getContentResolver(), Settings.Secure.LOCATION_MODE);
+            return off != 0;
+
+        } catch (Settings.SettingNotFoundException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }
