@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         builder.setTitle("Wybierz rodzaj transportu");
         final String[] restaurants = {"Pieszo", "Samochód", "Komunikacja miejska"};
         final int checkedItem = 0;
+        DataManager.getRouteParam().setTravelMode(TravelMode.WALKING);
         builder.setSingleChoiceItems(restaurants, checkedItem, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.media.MediaRouteSelector;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -48,7 +49,11 @@ import com.tripplanner.model.Route;
 import com.tripplanner.model.Section;
 import com.tripplanner.model.TravelMode;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -235,7 +240,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @SuppressLint("MissingPermission")
-    public void showRoute(Route route) {
+    public void showRoute() {
         mMap.setMyLocationEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, ZOOM_POINT));
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
@@ -244,7 +249,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(13);
 
-        for (Section section : route.getSections()) {
+        for (Section section : DataManager.getRoute().getSections()) {
             for (List<LatLng> points : section.getPolylines()) {
                 for (int i = 0; i < points.size(); ++i) {
                     polylineOptions.add(points.get(i));
@@ -255,16 +260,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void openRouteInfo(View v) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String title = "Czas trasy: " + DataManager.getRoute().getDuration() / 60 + " h " + DataManager.getRoute().getDuration() % 60 + " min\n" +
                 "Dystans: " + DataManager.getRoute().getDistance() / 1000 + " km " + DataManager.getRoute().getDistance() % 1000 + " m \n";
         ArrayList<String> infoList = new ArrayList<>();
         for (int i = 0; i < DataManager.getRoute().getSections().size(); ++i) {
             Section section = DataManager.getRoute().getSections().get(i);
-            String sectionInfo = "Rodzaj transportu: " + travelModeDictionary.get(section.getTravelMode()) +
-                    "\nCzas odcinka: " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " min" +
-                    "\nDystans: " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m";
-            String placeInfo = "Miejsce: " + DataManager.getPlaces().get(i).getName() +
-                    "\nCzas pobytu: " + DataManager.getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getPlaces().get(i).getDuration() % 60 + " min";
+            calendar.add(Calendar.MINUTE, section.getDuration());
+            String sectionInfo = travelModeDictionary.get(section.getTravelMode()) +
+                    "   " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " min" +
+                    "   " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m";
+            String placeInfo = DataManager.getPlaces().get(i).getName() +
+                    "   " + DataManager.getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getPlaces().get(i).getDuration() % 60 + " min" +
+                    "\n" + format.format(calendar.getTime()) + " - ";
+            calendar.add(Calendar.MINUTE, DataManager.getPlaces().get(i).getDuration());
+            placeInfo +=  format.format(calendar.getTime());
             infoList.add(sectionInfo);
             infoList.add(placeInfo);
         }

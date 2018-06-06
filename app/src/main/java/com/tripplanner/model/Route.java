@@ -11,6 +11,9 @@ public class Route {
     private List<Section> sections = new ArrayList<>();
     private List<Place> places = new ArrayList<>();
 
+    public Route(){
+    }
+
     public Route(List<Section> sections, List<Place> places) {
         this.sections = sections;
         this.places = places;
@@ -54,6 +57,9 @@ public class Route {
         int duration = 0;
         for(Section section : sections){
             duration += section.getDuration();
+        }
+        for(Place place : places){
+            duration += place.getDuration();
         }
         this.duration = duration;
     }

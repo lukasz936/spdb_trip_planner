@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.RouteRequestData;
+import com.tripplanner.view.MapsActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,11 +17,13 @@ import java.net.URL;
 public class RequestAsyncTask extends AsyncTask {
 
     private int requestType;
+    private GoogleApiController googleApiController;
 
     @Override
     protected Object doInBackground(Object[] params) {
         String data = "";
         try {
+            googleApiController = (GoogleApiController) params[2];
             requestType = (int) params[1];
             data = sendUrl((String) params[0]);
         } catch (Exception e) {
@@ -60,8 +63,10 @@ public class RequestAsyncTask extends AsyncTask {
         super.onPostExecute(o);
         if (requestType == RouteRequestData.FIND_ROUTE) {
             DataManager.getRouteRequestData().requestCounter++;
+            DataManager.getRouteRequestData().routes.add(JsonDataParser.parseRouteResponse((String) o));
             if (DataManager.getRouteRequestData().requestCounter == DataManager.getPlaces().size()) {
-
+                googleApiController.chooseTheBestRoute();
+                googleApiController.getView().showRoute();
             }
         }
     }

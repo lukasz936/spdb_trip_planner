@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
+import com.tripplanner.model.Route;
 import com.tripplanner.model.RouteParam;
 import com.tripplanner.model.RouteRequestData;
 import com.tripplanner.model.TravelMode;
@@ -30,23 +31,35 @@ public class GoogleApiController {
             Toast.makeText(view, "Nie wprowadzono wystarczającej liczby miejsc", Toast.LENGTH_LONG).show();
             return;
         }
-        DataManager.setRouteParam(new RouteParam());
         DataManager.setRouteRequestData(new RouteRequestData());
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(), createViasExceptPlace(i));
             RequestAsyncTask requestAsyncTask = new RequestAsyncTask();
-            requestAsyncTask.execute(url, RouteRequestData.FIND_ROUTE);
+            requestAsyncTask.execute(url, RouteRequestData.FIND_ROUTE, this);
         }
     }
 
     private List<LatLng> createViasExceptPlace(int placeIdx) {
         List<LatLng> latLngs = new ArrayList<>();
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            if (i == placeIdx) {
+            if (i != placeIdx) {
                 latLngs.add(DataManager.getPlaces().get(i).getLatLng());
             }
         }
         return latLngs;
+    }
+
+    public void chooseTheBestRoute() {
+        int minDuration = 1000000000;
+        int minId = 0;
+        for (int i = 0; i < DataManager.getRouteRequestData().routes.size(); ++i) {
+            int currentDuration = DataManager.getRouteRequestData().routes.get(i).getDuration();
+            if (currentDuration < minDuration) {
+                minDuration = currentDuration;
+                minId = i;
+            }
+        }
+        DataManager.setRoute(DataManager.getRouteRequestData().routes.get(minId));
     }
 
     private String createRouteUrl(LatLng origin, LatLng destination, List<LatLng> vias) {
@@ -77,4 +90,7 @@ public class GoogleApiController {
         return "https://maps.googleapis.com/maps/api/directions/";
     }
 
+    public MapsActivity getView() {
+        return view;
+    }
 }

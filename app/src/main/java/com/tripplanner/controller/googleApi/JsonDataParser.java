@@ -15,11 +15,14 @@ import java.util.List;
 
 public class JsonDataParser {
 
-    private Route parseRouteResponse(String data) throws JSONException {
+    public static Route parseRouteResponse(String data)  {
         if (data == null) {
             return null;
         }
-        JSONObject jsonData = new JSONObject(data);
+        JSONObject jsonData = null;
+        try {
+            jsonData = new JSONObject(data);
+
         JSONArray jsonRoutes = jsonData.getJSONArray("routes");
         if (jsonRoutes.length() == 0) {
             return null;
@@ -51,9 +54,13 @@ public class JsonDataParser {
             sections.add(section);
         }
         return new Route(sections, DataManager.getPlaces());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Route();
     }
 
-    private List<LatLng> decodePolyLine(final String poly) {
+    private static List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;
         List<LatLng> decoded = new ArrayList<LatLng>();
