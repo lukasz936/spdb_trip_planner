@@ -39,6 +39,11 @@ import com.tripplanner.model.Route;
 
 import java.util.List;
 
+import static com.google.android.gms.location.places.Place.TYPE_BAR;
+import static com.google.android.gms.location.places.Place.TYPE_CAFE;
+import static com.google.android.gms.location.places.Place.TYPE_FOOD;
+import static com.google.android.gms.location.places.Place.TYPE_RESTAURANT;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -53,6 +58,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int PREVIEW_POSITION = 2;
     public static final int SHOW_ROUTE = 3;
     public static final int ADD_NEW_LUNCH_PLACE = 4;
+
     private com.tripplanner.model.Place currentPlace;
     private int mode;
 
@@ -70,8 +76,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                    currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
-                    mapsController.selectPlace(currentPlace, false);
+                    if(mode == ADD_NEW_LUNCH_PLACE && !(place.getPlaceTypes().contains(TYPE_RESTAURANT) || place.getPlaceTypes().contains(TYPE_BAR) || place.getPlaceTypes().contains(TYPE_CAFE) || place.getPlaceTypes().contains(TYPE_FOOD))){
+                        new AlertDialog.Builder(MapsActivity.this)
+                                .setMessage("W wybranym miejscu nic nie zjesz!")
+                                .show();
+                    }
+                    else {
+                        currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
+                        mapsController.selectPlace(currentPlace, false);
+                    }
                 }
 
                 @Override
@@ -189,8 +202,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (requestCode == REQUEST_CODE_PLACEPICKER && resultCode == RESULT_OK) {
             Place placeSelected = PlacePicker.getPlace(data, this);
 
-            currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(), placeSelected.getName().toString());
-            mapsController.selectPlace(currentPlace, true);
+            if(mode == ADD_NEW_LUNCH_PLACE && !(placeSelected.getPlaceTypes().contains(TYPE_RESTAURANT) || placeSelected.getPlaceTypes().contains(TYPE_BAR) || placeSelected.getPlaceTypes().contains(TYPE_CAFE) || placeSelected.getPlaceTypes().contains(TYPE_FOOD))){
+                new AlertDialog.Builder(MapsActivity.this)
+                        .setMessage("W wybranym miejscu nic nie zjesz!")
+                        .show();
+            }else{
+                currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(), placeSelected.getName().toString());
+                mapsController.selectPlace(currentPlace, true);
+            }
         }
     }
 

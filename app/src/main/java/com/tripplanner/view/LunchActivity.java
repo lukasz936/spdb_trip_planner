@@ -26,6 +26,7 @@ import com.tripplanner.model.RouteParam;
 public class LunchActivity extends AppCompatActivity {
 
     private LunchController controller;
+    public boolean lunchPlaceSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,16 +146,15 @@ public class LunchActivity extends AppCompatActivity {
     }
 
 
-/*    @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MapsActivity.ADD_NEW_LUNCH_PLACE) {
             if (resultCode == Activity.RESULT_OK) {
-                //addViewItem(DataManager.getPlaces().get(DataManager.getPlaces().size() - 1));
-
+                //lunchPlaceSelected = data.getData();
             }
         }
-    }*/
+    }
 
     public void openPlacesListDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(LunchActivity.this);
@@ -178,6 +178,19 @@ public class LunchActivity extends AppCompatActivity {
 
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        if(DataManager.getRouteParam().getLunchOption() == LunchOption.exactPlace && DataManager.getRouteParam().getRestaurant().getLatLng() == null){
+            new AlertDialog.Builder(LunchActivity.this)
+                    .setMessage("Wybierz dokładne miejsce lunchu!")
+                    .show();
+        }
+        else{
+            super.onBackPressed();
+        }
     }
 }
 
