@@ -36,6 +36,7 @@ import com.tripplanner.R;
 import com.tripplanner.controller.MapsController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Route;
+import com.tripplanner.model.Section;
 
 import java.util.List;
 
@@ -213,18 +214,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void showRoute(Route route) {
-
+        mMap.setMyLocationEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, 16));
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             mMap.addMarker(new MarkerOptions().title(String.valueOf(i)).position(DataManager.getPlaces().get(i).getLatLng()));
         }
 
-        PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(10);
+        PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(13);
 
-        for (int i = 0; i < route.points.size(); i++)
-            polylineOptions.add(route.points.get(i));
-
+        for (Section section : route.getSections()) {
+            for (List<LatLng> points : section.getPolylines()) {
+                for(int i=0;i<points.size();++i){
+                    polylineOptions.add(points.get(i));
+                }
+            }
+        }
         mMap.addPolyline(polylineOptions);
     }
 }

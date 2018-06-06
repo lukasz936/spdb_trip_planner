@@ -32,7 +32,7 @@ public class GoogleApiController {
 
     private String createUrl() {
         Place destinationPlace = DataManager.getPlaceById(DataManager.getPlaces().size() - 1);
-            String origin = "origin=" + DataManager.userLocation.latitude + "," + DataManager.userLocation.longitude;
+        String origin = "origin=" + DataManager.userLocation.latitude + "," + DataManager.userLocation.longitude;
         String destination = "destination=" + destinationPlace.getLatLng().latitude + "," + destinationPlace.getLatLng().longitude;
         String sensor = "sensor=false";
         String mode = "mode=walking";

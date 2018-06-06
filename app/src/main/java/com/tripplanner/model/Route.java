@@ -6,15 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Route {
-    private double distance;
+    private int distance;
     private int duration;
-    public List<LatLng> points = new ArrayList<>();
+    private List<Section> sections = new ArrayList<>();
 
     public double getDistance() {
         return distance;
     }
 
-    public void setDistance(double distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 
@@ -26,11 +26,11 @@ public class Route {
         this.duration = duration;
     }
 
-    public List<LatLng> getPoints() {
-        return points;
+    public List<Section> getSections() {
+        return sections;
     }
 
-    public void setPoints(List<LatLng> points) {
-        this.points = points;
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 }
