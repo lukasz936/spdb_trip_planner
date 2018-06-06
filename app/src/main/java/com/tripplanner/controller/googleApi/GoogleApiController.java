@@ -103,18 +103,20 @@ public class GoogleApiController {
         return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
     }
 
-    private String createNearbyRestaurantNameUrl() {
-
-        //String parameters = origin + "&" + destination + "&" + waypoints + "&" + sensor + "&" + mode;
+    private String createNearbyRestaurantNameUrl(String restaurantName, LatLng searchFromThisPlace, String radius_int) {
+        String location = "location=" + searchFromThisPlace.latitude + "," + searchFromThisPlace.longitude;
         String output = "json";
-        return "https://maps.googleapis.com/maps/api/directions/";
+        String radius = "radius="+radius_int;
+        String keyword = "keyword="+restaurantName;
+        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
     }
 
-    private String createNearbyRestaurantUrl() {
-
-        //String parameters = origin + "&" + destination + "&" + waypoints + "&" + sensor + "&" + mode;
+    private String createNearbyRestaurantUrl(LatLng searchFromThisPlace, String radius_int) {
+        String location = "location=" + searchFromThisPlace.latitude + "," + searchFromThisPlace.longitude;
         String output = "json";
-        return "https://maps.googleapis.com/maps/api/directions/";
+        String radius = "radius="+radius_int;
+        String keyword = "keyword=restaurant";
+        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
     }
 
     public MapsActivity getView() {

@@ -101,6 +101,38 @@ public class JsonDataParser {
         return new Section();
     }
 
+    public static List<LatLng> parseSearchResponse(String data)  {
+        if (data == null) {
+            return null;
+        }
+        JSONObject jsonData = null;
+        try {
+            jsonData = new JSONObject(data);
+
+            JSONArray jsonResults = jsonData.getJSONArray("results");
+            if (jsonResults.length() == 0) {
+                return null;
+            }
+
+            List<LatLng> placesList = new ArrayList<>();
+
+            for(int i = 0; i<jsonResults.length(); ++i){
+                JSONObject jsonObject = jsonResults.getJSONObject(i);
+                JSONObject jsonGeometry = jsonObject.getJSONObject("geometry");
+                JSONObject jsonLocation = jsonGeometry.getJSONObject("location");
+                double lat = jsonLocation.getDouble("lat");
+                double lng = jsonLocation.getDouble("lng");
+                String name = jsonObject.getString("name");
+                placesList.add(new LatLng(lat,lng));
+            }
+
+            return placesList;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>();
+    }
+
     private static List<LatLng> decodePolyLine(final String poly) {
         int len = poly.length();
         int index = 0;
