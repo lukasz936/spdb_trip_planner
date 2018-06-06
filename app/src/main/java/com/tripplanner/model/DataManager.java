@@ -15,7 +15,8 @@ public final class DataManager {
     private static List<Place> places = new ArrayList<>();
     private static int maxPlaceId = 0;
     private static Route route;
-    private static RouteParam routeParam = new RouteParam();
+    private static RouteParam routeParam;
+    private static RouteRequestData routeRequestData;
 
 
     public static LatLng userLocation;
@@ -59,6 +60,9 @@ public final class DataManager {
         return null;
     }
 
+    public static void setRouteParam(RouteParam routeParam) {
+        DataManager.routeParam = routeParam;
+    }
 
     public static RouteParam getRouteParam() {
         return routeParam;
@@ -74,5 +78,13 @@ public final class DataManager {
 
     public static void setRoute(Route route) {
         DataManager.route = route;
+    }
+
+    public static RouteRequestData getRouteRequestData() {
+        return routeRequestData;
+    }
+
+    public static void setRouteRequestData(RouteRequestData routeRequestData) {
+        DataManager.routeRequestData = routeRequestData;
     }
 }

@@ -283,7 +283,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String[] items = new String[5];
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Infprmacje o odcinku trasy:");
+        builder.setTitle("Informacje o odcinku trasy:");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 // Do something with the selection

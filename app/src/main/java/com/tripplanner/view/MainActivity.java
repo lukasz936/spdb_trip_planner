@@ -33,6 +33,7 @@ import com.tripplanner.R;
 import com.tripplanner.controller.MainController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
+import com.tripplanner.model.TravelMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     mLocationPermissionGranted = true;
-                } else{
+                } else {
                     finish();
                 }
             }
@@ -178,19 +179,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         placeListLayout.addView(view);
     }
 
-    public void openMultiOptionWindow(final int placeId){
+    public void openMultiOptionWindow(final int placeId) {
         CharSequence options[] = new CharSequence[]{"Czas pobytu", "Podgląd na mapie", "Usuń"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Wybierz");
         builder.setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case 0: openTimePicker(placeId, 1, 0);
-                            break;
-                    case 1: controller.startMapsActivity(MapsActivity.PREVIEW_POSITION, placeId);
-                            break;
-                    case 2: controller.removePlace(placeId);
+                switch (which) {
+                    case 0:
+                        openTimePicker(placeId, 1, 0);
+                        break;
+                    case 1:
+                        controller.startMapsActivity(MapsActivity.PREVIEW_POSITION, placeId);
+                        break;
+                    case 2:
+                        controller.removePlace(placeId);
                 }
             }
         });
@@ -224,7 +228,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((TextView) views.get(placeId).findViewById(R.id.activityMainRowMins)).setText(String.valueOf(minutes));
     }
 
-    public void showRoute(View v){
-        controller.startMapsActivity(MapsActivity.SHOW_ROUTE, null);
+    public void showRoute(View v) {
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("Wybierz rodzaj transportu");
+        final String[] restaurants = {"Pieszo", "Samochód", "Komunikacja miejska"};
+        final int checkedItem = 0;
+        builder.setSingleChoiceItems(restaurants, checkedItem, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0:
+                        DataManager.getRouteParam().setTravelMode(TravelMode.WALKING);
+                        break;
+                    case 1:
+                        DataManager.getRouteParam().setTravelMode(TravelMode.DRIVING);
+                        break;
+                    case 2:
+                        DataManager.getRouteParam().setTravelMode(TravelMode.TRANSIT);
+                        break;
+                }
+
+            }
+        });
+        builder.setPositiveButton("Wybierz", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                controller.startMapsActivity(MapsActivity.SHOW_ROUTE, null);
+            }
+        });
+        builder.setNegativeButton("Cofnij", null);
+        android.app.AlertDialog dialog = builder.create();
+        dialog.show();
     }
+
 }

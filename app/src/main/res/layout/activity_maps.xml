@@ -10,18 +10,6 @@ tools:context="com.tripplanner.view.MapsActivity">
 <include layout="@layout/content_maps"
     android:id="@+id/include" />
 
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAddPlace3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_lunch"
-        app:borderWidth="0dp" />
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabAddPlace"
         android:layout_width="wrap_content"
@@ -32,17 +20,6 @@ tools:context="com.tripplanner.view.MapsActivity">
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_search"
         android:onClick="openRouteInfo"
-        app:borderWidth="0dp" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabShowRoute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_margin="@dimen/fab_margin"
-        android:background="@color/colorPrimary"
-        android:backgroundTint="@color/colorPrimary"
-        android:src="@drawable/ic_show_route"
         app:borderWidth="0dp" />
 
 </android.support.design.widget.CoordinatorLayout>

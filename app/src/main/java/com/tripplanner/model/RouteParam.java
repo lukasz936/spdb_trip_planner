@@ -14,7 +14,9 @@ public class RouteParam {
 
     private Place restaurant;
 
-    RouteParam() {
+    private TravelMode travelMode;
+
+    public RouteParam() {
         this.places = new ArrayList<>();
         this.restaurant = new Place(null, null);
         this.restaurant.setStartDate(new Date(2018, 1,1, 13, 0));
@@ -25,9 +27,9 @@ public class RouteParam {
 
     public  Place getRestaurant(){return  restaurant;}
 
-    public  void setRestaurant(Place  restaurant_1){restaurant = restaurant_1;}
+    public  void setRestaurant(Place  restaurant){restaurant = restaurant;}
 
-    public  void setRestaurantName(String  restaurantName_1){restaurantName = restaurantName_1;}
+    public  void setRestaurantName(String  restaurantName){restaurantName = restaurantName;}
 
     public LunchOption getLunchOption() { return  lunchOption;}
 
@@ -41,5 +43,13 @@ public class RouteParam {
 
     public String getRestaurantName() {
         return restaurantName;
+    }
+
+    public TravelMode getTravelMode() {
+        return travelMode;
+    }
+
+    public void setTravelMode(TravelMode travelMode) {
+        this.travelMode = travelMode;
     }
 }
