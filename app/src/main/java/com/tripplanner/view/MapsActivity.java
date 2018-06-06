@@ -51,6 +51,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int ADD_NEW_POSITION = 1;
     public static final int PREVIEW_POSITION = 2;
     public static final int SHOW_ROUTE = 3;
+    public static final int ADD_NEW_LUNCH_PLACE = 4;
     private com.tripplanner.model.Place currentPlace;
     private int mode;
 
@@ -63,7 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
         mode = getIntent().getExtras().getInt("id");
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-        if (mode == ADD_NEW_POSITION) {
+        if (mode == ADD_NEW_POSITION || mode == ADD_NEW_LUNCH_PLACE) {
             autocompleteFragment.getView().setBackgroundColor(Color.WHITE);
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
@@ -92,7 +93,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
-        if (mode == ADD_NEW_POSITION) {
+        if (mode == ADD_NEW_POSITION || mode == ADD_NEW_LUNCH_PLACE) {
             mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
                 @Override
                 public void onMapClick(LatLng latLng) {
@@ -137,7 +138,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } else {
                 mapsController.cancelAddingPlace();
             }
-        } else {
+        }
+        else if(mode == ADD_NEW_LUNCH_PLACE){
+            if (currentPlace != null){
+                new AlertDialog.Builder(MapsActivity.this)
+                        .setMessage("Czy na pewno chcesz dodać wybraną restaurację?")
+                        .setNegativeButton("Nie", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mapsController.cancelAddingPlace();
+                            }
+                        })
+                        .setPositiveButton("Tak", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mapsController.addRestaurant(currentPlace);
+                            }
+                        })
+                        .show();
+            } else {
+                mapsController.cancelAddingPlace();
+            }
+        }
+        else {
             finish();
         }
     }

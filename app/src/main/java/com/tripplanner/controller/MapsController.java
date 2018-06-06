@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.tripplanner.controller.googleApi.GoogleApiController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
+import com.tripplanner.model.RouteParam;
 import com.tripplanner.view.MapsActivity;
 
 /**
@@ -34,6 +35,13 @@ public class MapsController implements IMapsController {
     @Override
     public void addPlace(Place place){
         DataManager.addPlace(place);
+        view.setResult(Activity.RESULT_OK, new Intent());
+        view.finish();
+    }
+
+    @Override
+    public void addRestaurant(Place place){
+        RouteParam.setRestaurant(place);
         view.setResult(Activity.RESULT_OK, new Intent());
         view.finish();
     }

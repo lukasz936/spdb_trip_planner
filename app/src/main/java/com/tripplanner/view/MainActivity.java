@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addLunch(View v) {
-        controller.startLunchActivity(3);
+        controller.startLunchActivity(MapsActivity.ADD_NEW_LUNCH_PLACE);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.tripplanner.view;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,7 +78,7 @@ public class LunchActivity extends AppCompatActivity {
             case R.id.radioButton:
                 if (checked)
                     RouteParam.setLunchOption(LunchOption.exactPlace);
-                    controller.startMapsActivity(1);
+                    controller.startMapsActivity(MapsActivity.ADD_NEW_LUNCH_PLACE);
                 break;
             case R.id.radioButton2:
                 if (checked)
@@ -126,6 +128,17 @@ public class LunchActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == MapsActivity.ADD_NEW_LUNCH_PLACE) {
+            if (resultCode == Activity.RESULT_OK) {
+                //addViewItem(DataManager.getPlaces().get(DataManager.getPlaces().size() - 1));
+
+            }
+        }
+    }
 }
 
 

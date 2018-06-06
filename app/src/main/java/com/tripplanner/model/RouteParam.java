@@ -15,4 +15,6 @@ public final class RouteParam {
     public static void setLunchOption(LunchOption lunchOption_1){lunchOption = lunchOption_1;}
 
     public static Place getRestaurant(){return  restaurant;}
+
+    public static void setRestaurant(Place  restaurant_1){restaurant =restaurant_1;}
 }
