@@ -5,6 +5,8 @@ import android.util.Log;
 
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.RouteRequestData;
+import com.tripplanner.model.Section;
+import com.tripplanner.model.TravelMode;
 import com.tripplanner.view.MapsActivity;
 
 import java.io.BufferedReader;
@@ -18,11 +20,13 @@ public class RequestAsyncTask extends AsyncTask {
 
     private int requestType;
     private GoogleApiController googleApiController;
+    private TravelMode travelMode;
 
     @Override
     protected Object doInBackground(Object[] params) {
         String data = "";
         try {
+            travelMode = (TravelMode) params[3];
             googleApiController = (GoogleApiController) params[2];
             requestType = (int) params[1];
             data = sendUrl((String) params[0]);
@@ -68,6 +72,18 @@ public class RequestAsyncTask extends AsyncTask {
                 googleApiController.chooseTheBestRoute();
                 googleApiController.getView().showRoute();
             }
+        } else if (requestType == RouteRequestData.FIND_SECTION) {
+            Section newSection = JsonDataParser.parseSectionRouteResponse((String) o);
+            newSection.setTravelMode(travelMode);
+            for (int i = 0; i < DataManager.getRoute().getSections().size(); ++i) {
+                if (DataManager.getRoute().getSections().get(i).getStartLocation().latitude == newSection.getStartLocation().latitude &&
+                        DataManager.getRoute().getSections().get(i).getStartLocation().longitude == newSection.getStartLocation().longitude) {
+                    DataManager.getRoute().getSections().set(i,newSection);
+                }
+            }
+            DataManager.getRoute().updateDuration();
+            DataManager.getRoute().updateDistance();
+            googleApiController.getView().showRoute();
         }
     }
 

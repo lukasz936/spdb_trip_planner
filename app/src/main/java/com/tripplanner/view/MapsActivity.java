@@ -244,12 +244,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void showRoute() {
         mMap.setMyLocationEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, ZOOM_POINT));
+        mMap.clear();
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             mMap.addMarker(new MarkerOptions().position(DataManager.getPlaces().get(i).getLatLng()));
         }
-
         PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(13);
-
         for (Section section : DataManager.getRoute().getSections()) {
             for (List<LatLng> points : section.getPolylines()) {
                 for (int i = 0; i < points.size(); ++i) {
@@ -259,6 +258,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mMap.addPolyline(polylineOptions);
     }
+
 
     public void openRouteInfo(View v) {
         Calendar calendar = Calendar.getInstance();
@@ -295,39 +295,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(final Marker marker) {
         String[] items = new String[4];
-        TravelMode travelMode = TravelMode.WALKING;
         String travelMode_pl = "Pieszo";
+        Section section = new Section();
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             if (marker.getPosition().latitude == DataManager.getPlaces().get(i).getLatLng().latitude && marker.getPosition().longitude == DataManager.getPlaces().get(i).getLatLng().longitude) {
                 items[0] = DataManager.getPlaces().get(i).getName();
-                switch (travelMode) {
+                section = DataManager.getRoute().getSections().get(i);
+                switch (section.getTravelMode()) {
                     case DRIVING:
                         travelMode_pl = "Samochód";
+                        break;
                     case TRANSIT:
                         travelMode_pl = "Komunikacja";
+                        break;
                     case WALKING:
                         travelMode_pl = "Pieszo";
+                        break;
                 }
                 items[1] = "Typ transport: " + travelMode_pl;
-                items[2] = "Czas odcinka: " + DataManager.getRoute().getSections().get(i).getDuration() / 60 + " h " + DataManager.getRoute().getSections().get(i).getDuration() % 60 + " m ";
-                items[3] = "Dystans: " + DataManager.getRoute().getSections().get(i).getDistance() / 1000 + " km " + DataManager.getRoute().getSections().get(i).getDistance() % 1000 + " m ";
+                items[2] = "Czas odcinka: " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " m ";
+                items[3] = "Dystans: " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m ";
                 break;
             }
         }
+        final Section sectionToChange = section;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Informacje o odcinku trasy:");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int item) {
-                // Do something with the selection
-                dialog.dismiss();
-            }
-
-        });
-
+        builder.setItems(items, null);
         String positive = "Pieszo";
         String negative = "Samochód";
-        switch (travelMode) {
+        switch (sectionToChange.getTravelMode()) {
             case DRIVING: {
                 positive = "Pieszo";
                 negative = "Komunikacja";
@@ -347,11 +345,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                switch (sectionToChange.getTravelMode()) {
+                    case DRIVING: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.WALKING);
+                        break;
+                    }
+                    case TRANSIT: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.WALKING);
+                        break;
+                    }
+                    case WALKING: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.DRIVING);
+                        break;
+                    }
+                }
             }
         });
-
-        builder.setNegativeButton(negative, null);
+        builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (sectionToChange.getTravelMode()) {
+                    case DRIVING: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.TRANSIT);
+                        break;
+                    }
+                    case TRANSIT: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.DRIVING);
+                        break;
+                    }
+                    case WALKING: {
+                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.TRANSIT);
+                        break;
+                    }
+                }
+            }
+        });
         builder.show();
         return false;
     }

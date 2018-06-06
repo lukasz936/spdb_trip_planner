@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.controller.googleApi.GoogleApiController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Place;
+import com.tripplanner.model.TravelMode;
 import com.tripplanner.view.MapsActivity;
 
 /**
@@ -55,6 +56,10 @@ public class MapsController implements IMapsController {
     @Override
     public void showRoute() {
         googleApiController.findRoute();
+    }
+
+    public void changeSection(LatLng origin, LatLng destination, TravelMode travelMode){
+        googleApiController.findSectionRoute(origin, destination, travelMode);
     }
 
     @Override

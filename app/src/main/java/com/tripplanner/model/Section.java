@@ -14,6 +14,7 @@ public class Section {
     private List<List<LatLng>> polylines;
     private TravelMode travelMode;
 
+
     public int getDistance() {
         return distance;
     }

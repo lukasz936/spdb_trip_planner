@@ -37,7 +37,7 @@ public class GoogleApiController {
             String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(),
                     createViasExceptPlace(i), DataManager.getRouteParam().getTravelMode());
             RequestAsyncTask requestAsyncTask = new RequestAsyncTask();
-            requestAsyncTask.execute(url, RouteRequestData.FIND_ROUTE, this);
+            requestAsyncTask.execute(url, RouteRequestData.FIND_ROUTE, this, DataManager.getRouteParam().getTravelMode());
         }
     }
 
@@ -49,6 +49,12 @@ public class GoogleApiController {
             }
         }
         return latLngs;
+    }
+
+    public void findSectionRoute(LatLng origin, LatLng destination, TravelMode travelMode){
+        String url = createSectionUrl(origin,destination,travelMode);
+        RequestAsyncTask requestAsyncTask = new RequestAsyncTask();
+        requestAsyncTask.execute(url, RouteRequestData.FIND_SECTION, this, travelMode);
     }
 
     public void chooseTheBestRoute() {
@@ -83,6 +89,16 @@ public class GoogleApiController {
             waypoints += "|" + latLng.latitude + "," + latLng.longitude;
         }
         String parameters = originStr + "&" + destinationStr + "&" + waypoints + "&" + sensor + "&" + mode;
+        String output = "json";
+        return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
+    }
+
+    private String createSectionUrl(LatLng origin, LatLng destination, TravelMode travelMode) {
+        String originStr = "origin=" + origin.latitude + "," + origin.longitude;
+        String destinationStr = "destination=" + destination.latitude + "," + destination.longitude;
+        String sensor = "sensor=false";
+        String mode = "mode=" + travelMode.name().toLowerCase();
+        String parameters = originStr + "&" + destinationStr + "&" +  sensor + "&" + mode;
         String output = "json";
         return "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
     }

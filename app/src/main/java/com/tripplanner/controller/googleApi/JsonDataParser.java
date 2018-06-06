@@ -15,7 +15,7 @@ import java.util.List;
 
 public class JsonDataParser {
 
-    public static Route parseRouteResponse(String data)  {
+    public static Route parseRouteResponse(String data) {
         if (data == null) {
             return null;
         }
@@ -23,39 +23,82 @@ public class JsonDataParser {
         try {
             jsonData = new JSONObject(data);
 
-        JSONArray jsonRoutes = jsonData.getJSONArray("routes");
-        if (jsonRoutes.length() == 0) {
-            return null;
-        }
-        JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
-        JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
-        List<Section> sections = new ArrayList<>();
-        for (int i = 0; i < jsonLegs.length(); ++i) {
-            Section section = new Section();
-            JSONObject jsonLeg = jsonLegs.getJSONObject(i);
-            JSONObject jsonLegDistance = jsonLeg.getJSONObject("distance");
-            JSONObject jsonLegDuration = jsonLeg.getJSONObject("duration");
-            JSONObject jsonLegEndLocation = jsonLeg.getJSONObject("end_location");
-            JSONObject jsonLegStartLocation = jsonLeg.getJSONObject("start_location");
-            JSONArray jsonSteps = jsonLeg.getJSONArray("steps");
-            List<List<LatLng>> polylines = new ArrayList<>();
-            for (int j = 0; j < jsonSteps.length(); ++j) {
-                JSONObject jsonStep = jsonSteps.getJSONObject(j);
-                JSONObject jsonStepPolyline = jsonStep.getJSONObject("polyline");
-                polylines.add(decodePolyLine(jsonStepPolyline.getString("points")));
+            JSONArray jsonRoutes = jsonData.getJSONArray("routes");
+            if (jsonRoutes.length() == 0) {
+                return null;
             }
-            section.setDistance(jsonLegDistance.getInt("value"));
-            section.setDuration(jsonLegDuration.getInt("value")/60);
-            section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
-            section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
-            section.setPolylines(polylines);
-            sections.add(section);
-        }
-        return new Route(sections, DataManager.getPlaces());
+            JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
+            JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
+            List<Section> sections = new ArrayList<>();
+            for (int i = 0; i < jsonLegs.length(); ++i) {
+                Section section = new Section();
+                JSONObject jsonLeg = jsonLegs.getJSONObject(i);
+                JSONObject jsonLegDistance = jsonLeg.getJSONObject("distance");
+                JSONObject jsonLegDuration = jsonLeg.getJSONObject("duration");
+                JSONObject jsonLegEndLocation = jsonLeg.getJSONObject("end_location");
+                JSONObject jsonLegStartLocation = jsonLeg.getJSONObject("start_location");
+                JSONArray jsonSteps = jsonLeg.getJSONArray("steps");
+                List<List<LatLng>> polylines = new ArrayList<>();
+                for (int j = 0; j < jsonSteps.length(); ++j) {
+                    JSONObject jsonStep = jsonSteps.getJSONObject(j);
+                    JSONObject jsonStepPolyline = jsonStep.getJSONObject("polyline");
+                    polylines.add(decodePolyLine(jsonStepPolyline.getString("points")));
+                }
+                section.setDistance(jsonLegDistance.getInt("value"));
+                section.setDuration(jsonLegDuration.getInt("value") / 60);
+                section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
+                section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
+                section.setPolylines(polylines);
+                sections.add(section);
+            }
+            return new Route(sections, DataManager.getPlaces());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return new Route();
+    }
+
+    public static Section parseSectionRouteResponse(String data) {
+        if (data == null) {
+            return null;
+        }
+        JSONObject jsonData = null;
+        try {
+            jsonData = new JSONObject(data);
+
+            JSONArray jsonRoutes = jsonData.getJSONArray("routes");
+            if (jsonRoutes.length() == 0) {
+                return null;
+            }
+            JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
+            JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
+            List<Section> sections = new ArrayList<>();
+            for (int i = 0; i < jsonLegs.length(); ++i) {
+                Section section = new Section();
+                JSONObject jsonLeg = jsonLegs.getJSONObject(i);
+                JSONObject jsonLegDistance = jsonLeg.getJSONObject("distance");
+                JSONObject jsonLegDuration = jsonLeg.getJSONObject("duration");
+                JSONObject jsonLegEndLocation = jsonLeg.getJSONObject("end_location");
+                JSONObject jsonLegStartLocation = jsonLeg.getJSONObject("start_location");
+                JSONArray jsonSteps = jsonLeg.getJSONArray("steps");
+                List<List<LatLng>> polylines = new ArrayList<>();
+                for (int j = 0; j < jsonSteps.length(); ++j) {
+                    JSONObject jsonStep = jsonSteps.getJSONObject(j);
+                    JSONObject jsonStepPolyline = jsonStep.getJSONObject("polyline");
+                    polylines.add(decodePolyLine(jsonStepPolyline.getString("points")));
+                }
+                section.setDistance(jsonLegDistance.getInt("value"));
+                section.setDuration(jsonLegDuration.getInt("value") / 60);
+                section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
+                section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
+                section.setPolylines(polylines);
+                sections.add(section);
+            }
+            return sections.size() < 1 ? new Section() : sections.get(0);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Section();
     }
 
     private static List<LatLng> decodePolyLine(final String poly) {
