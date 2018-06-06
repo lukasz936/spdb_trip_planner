@@ -14,21 +14,23 @@ public class Place {
     String name;
     Date startDate;
     int duration;
-    //Boolean lunch_flag;
-    //Date userStartDateLunch;
 
     public Place(){}
 
     public Place(LatLng latLng) {
         this.latLng = latLng;
         this.name = String.format("%.2f", latLng.latitude) + "   " + String.format("%.2f", latLng.longitude);
-       // this.lunch_flag = false;
     }
 
     public Place(LatLng latLng, String name) {
         this.latLng = latLng;
         this.name = name;
-        //this.lunch_flag = false;
+    }
+
+    public Place(LatLng latLng, String name, int duration) {
+        this.latLng = latLng;
+        this.name = name;
+        this.duration = duration;
     }
 
     public int getId() {
@@ -55,14 +57,6 @@ public class Place {
         this.name = name;
     }
 
-    /*public Date getUserStartDateLunch() {
-        return userStartDateLunch;
-    }
-
-    public void setUserStartDateLunch(Date startDateLunch) {
-        this.userStartDateLunch = startDateLunch;
-    }*/
-
     public Date getStartDate() {
         return startDate;
     }
@@ -70,7 +64,6 @@ public class Place {
     public void setStartDate(Date startDate) {
         this.startDate = startDate;
     }
-
 
     public int getDuration() {
         return duration;
@@ -80,11 +73,4 @@ public class Place {
         this.duration = duration;
     }
 
-    //public void setLunch_flag(Boolean flag) {
-    //    this.lunch_flag = flag;
-   // }
-
-    //public Boolean getLunch_flag() {
-    //    return lunch_flag;
-   // }
 }

@@ -4,18 +4,24 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.media.MediaRouteSelector;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
@@ -77,12 +83,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
                 @Override
                 public void onPlaceSelected(com.google.android.gms.location.places.Place place) {
-                    if(mode == ADD_NEW_LUNCH_PLACE && !(place.getPlaceTypes().contains(TYPE_RESTAURANT) || place.getPlaceTypes().contains(TYPE_BAR) || place.getPlaceTypes().contains(TYPE_CAFE) || place.getPlaceTypes().contains(TYPE_FOOD))){
+                    if (mode == ADD_NEW_LUNCH_PLACE && !(place.getPlaceTypes().contains(TYPE_RESTAURANT) || place.getPlaceTypes().contains(TYPE_BAR) || place.getPlaceTypes().contains(TYPE_CAFE) || place.getPlaceTypes().contains(TYPE_FOOD))) {
                         new AlertDialog.Builder(MapsActivity.this)
                                 .setMessage("W wybranym miejscu nic nie zjesz!")
                                 .show();
-                    }
-                    else {
+                    } else {
                         currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
                         mapsController.selectPlace(currentPlace, false);
                     }
@@ -202,12 +207,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_CODE_PLACEPICKER && resultCode == RESULT_OK) {
             Place placeSelected = PlacePicker.getPlace(data, this);
-
-            if(mode == ADD_NEW_LUNCH_PLACE && !(placeSelected.getPlaceTypes().contains(TYPE_RESTAURANT) || placeSelected.getPlaceTypes().contains(TYPE_BAR) || placeSelected.getPlaceTypes().contains(TYPE_CAFE) || placeSelected.getPlaceTypes().contains(TYPE_FOOD))){
+            if (mode == ADD_NEW_LUNCH_PLACE && !(placeSelected.getPlaceTypes().contains(TYPE_RESTAURANT) || placeSelected.getPlaceTypes().contains(TYPE_BAR) || placeSelected.getPlaceTypes().contains(TYPE_CAFE) || placeSelected.getPlaceTypes().contains(TYPE_FOOD))) {
                 new AlertDialog.Builder(MapsActivity.this)
                         .setMessage("W wybranym miejscu nic nie zjesz!")
                         .show();
-            }else{
+            } else {
                 currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(), placeSelected.getName().toString());
                 mapsController.selectPlace(currentPlace, true);
             }
@@ -217,7 +221,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @SuppressLint("MissingPermission")
     public void showRoute(Route route) {
         mMap.setMyLocationEnabled(false);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, ZOOM_POINT));
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             mMap.addMarker(new MarkerOptions().title(String.valueOf(i)).position(DataManager.getPlaces().get(i).getLatLng()));
         }
@@ -226,11 +230,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for (Section section : route.getSections()) {
             for (List<LatLng> points : section.getPolylines()) {
-                for(int i=0;i<points.size();++i){
+                for (int i = 0; i < points.size(); ++i) {
                     polylineOptions.add(points.get(i));
                 }
             }
         }
         mMap.addPolyline(polylineOptions);
+    }
+
+    public void openRouteInfo(View v) {
+        String title = "Czas trasy: " + DataManager.getRoute().getDuration() / 60 + " h " + DataManager.getRoute().getDuration() % 60 + " min\n" +
+                "Dystans: " + DataManager.getRoute().getDistance() / 1000 + " km " + DataManager.getRoute().getDistance() % 1000 + " m ";
+
+        String names[] = {"A", "B", "C", "D"};
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapsActivity.this);
+        LayoutInflater inflater = getLayoutInflater();
+        View convertView = (View) inflater.inflate(R.layout.list, null);
+        alertDialog.setView(convertView);
+        alertDialog.setTitle(title);
+        ListView lv = (ListView) convertView.findViewById(R.id.listView1);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+        lv.setAdapter(adapter);
+        alertDialog.show();
     }
 }

@@ -31,6 +31,7 @@ tools:context="com.tripplanner.view.MapsActivity">
         android:background="@color/colorPrimary"
         android:backgroundTint="@color/colorPrimary"
         android:src="@drawable/ic_search"
+        android:onClick="openRouteInfo"
         app:borderWidth="0dp" />
 
     <android.support.design.widget.FloatingActionButton

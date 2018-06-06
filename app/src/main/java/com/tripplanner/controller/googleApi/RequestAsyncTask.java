@@ -5,10 +5,8 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
-import com.tripplanner.model.Place;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.Section;
-import com.tripplanner.model.Step;
 import com.tripplanner.view.MapsActivity;
 
 import org.json.JSONArray;
@@ -71,7 +69,9 @@ public class RequestAsyncTask extends AsyncTask {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         try {
-            view.showRoute(parseJson((String) o));
+            Route route = parseJson((String) o);
+            DataManager.setRoute(route);
+            view.showRoute(route);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -88,7 +88,8 @@ public class RequestAsyncTask extends AsyncTask {
         if (jsonRoutes.length() == 0) {
             return null;
         }
-        Route route = new Route();
+
+        int sumDuration = 0;
         JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
         JSONObject jsonOverviewPolyline = jsonRoute.getJSONObject("overview_polyline");
         JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
@@ -108,14 +109,13 @@ public class RequestAsyncTask extends AsyncTask {
                 polylines.add(decodePolyLine(jsonStepPolyline.getString("points")));
             }
             section.setDistance(jsonLegDistance.getInt("value"));
-            section.setDuration(jsonLegDuration.getInt("value"));
+            section.setDuration(jsonLegDuration.getInt("value")/60);
             section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
             section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
             section.setPolylines(polylines);
             sections.add(section);
         }
-        route.setSections(sections);
-        return route;
+        return new Route(sections, DataManager.getPlaces());
     }
 
     private List<LatLng> decodePolyLine(final String poly) {

@@ -1,20 +1,21 @@
 package com.tripplanner.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
 
-public final class RouteParam {
+public class RouteParam {
 
-    List<Place> places;
+    private List<Place> places = new ArrayList<>();
 
-    LunchOption lunchOption = LunchOption.anyPlace;
+    private LunchOption lunchOption = LunchOption.anyPlace;
 
-    String restaurantName;
+    private String restaurantName;
 
-    Place restaurant;
+    private Place restaurant;
 
-    public RouteParam(List<Place> places) {
-        this.places = places;
+    RouteParam() {
+        this.places = new ArrayList<>();
         this.restaurant = new Place(null, null);
         this.restaurant.setStartDate(new Date(2018, 1,1, 13, 0));
         this.restaurant.setDuration(60);
@@ -29,4 +30,16 @@ public final class RouteParam {
     public  void setRestaurantName(String  restaurantName_1){restaurantName = restaurantName_1;}
 
     public LunchOption getLunchOption() { return  lunchOption;}
+
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+
+    public String getRestaurantName() {
+        return restaurantName;
+    }
 }

@@ -36,6 +36,10 @@ public class MainController implements IMainController {
             i.putExtra("placeId", placeId);
         }
         if( id == MapsActivity.SHOW_ROUTE || id ==MapsActivity.ADD_NEW_POSITION){
+            if(id == MapsActivity.SHOW_ROUTE && DataManager.userLocation == null){
+                Toast.makeText(view, "Lokalizacja użytkownika nie jest określona", Toast.LENGTH_LONG).show();
+                return;
+            }
             if(!isGpsOn()){
                 Toast.makeText(view, "Aplikacja wymaga lokalizacji użytkownika. Proszę włączyć GPS", Toast.LENGTH_LONG).show();
                 return;
