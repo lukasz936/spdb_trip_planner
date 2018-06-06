@@ -45,8 +45,12 @@ import com.tripplanner.controller.MapsController;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.Section;
+import com.tripplanner.model.TravelMode;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.google.android.gms.location.places.Place.TYPE_BAR;
 import static com.google.android.gms.location.places.Place.TYPE_CAFE;
@@ -68,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int PREVIEW_POSITION = 2;
     public static final int SHOW_ROUTE = 3;
     public static final int ADD_NEW_LUNCH_PLACE = 4;
+    private Map<TravelMode, String> travelModeDictionary = new HashMap<>();
 
     private com.tripplanner.model.Place currentPlace;
     private int mode;
@@ -106,6 +111,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             autocompleteFragment.getView().setVisibility(View.GONE);
             mapsController.showRoute();
         }
+        travelModeDictionary.put(TravelMode.DRIVING, "Samochód");
+        travelModeDictionary.put(TravelMode.WALKING, "Pieszo");
+        travelModeDictionary.put(TravelMode.TRANSIT, "Komunikacja miejska");
     }
 
     @Override
@@ -246,20 +254,29 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void openRouteInfo(View v) {
         String title = "Czas trasy: " + DataManager.getRoute().getDuration() / 60 + " h " + DataManager.getRoute().getDuration() % 60 + " min\n" +
-                "Dystans: " + DataManager.getRoute().getDistance() / 1000 + " km " + DataManager.getRoute().getDistance() % 1000 + " m ";
-
-        String names[] = {"A", "B", "C", "D"};
+                "Dystans: " + DataManager.getRoute().getDistance() / 1000 + " km " + DataManager.getRoute().getDistance() % 1000 + " m \n";
+        ArrayList<String> infoList = new ArrayList<>();
+        for (int i = 0; i < DataManager.getRoute().getSections().size(); ++i) {
+            Section section = DataManager.getRoute().getSections().get(i);
+            String sectionInfo = "Rodzaj transportu: " + travelModeDictionary.get(section.getTravelMode()) +
+                    "\nCzas odcinka: " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " min" +
+                    "\nDystans: " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m";
+            String placeInfo = "Miejsce: " + DataManager.getPlaces().get(i).getName() +
+                    "\nCzas pobytu: " + DataManager.getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getPlaces().get(i).getDuration() % 60 + " min";
+            infoList.add(sectionInfo);
+            infoList.add(placeInfo);
+        }
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(MapsActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         View convertView = (View) inflater.inflate(R.layout.list, null);
         alertDialog.setView(convertView);
         alertDialog.setTitle(title);
         ListView lv = (ListView) convertView.findViewById(R.id.listView1);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, infoList.toArray(new String[infoList.size()]));
         lv.setAdapter(adapter);
         alertDialog.show();
     }
-}
+
 
     @Override
     public boolean onMarkerClick(final Marker marker) {

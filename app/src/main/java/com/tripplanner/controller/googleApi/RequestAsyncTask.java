@@ -7,6 +7,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.Section;
+import com.tripplanner.model.TravelMode;
 import com.tripplanner.view.MapsActivity;
 
 import org.json.JSONArray;
@@ -113,6 +114,7 @@ public class RequestAsyncTask extends AsyncTask {
             section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
             section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
             section.setPolylines(polylines);
+            section.setTravelMode(TravelMode.WALKING);
             sections.add(section);
         }
         return new Route(sections, DataManager.getPlaces());

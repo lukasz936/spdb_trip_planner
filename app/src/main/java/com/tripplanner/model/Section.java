@@ -12,6 +12,7 @@ public class Section {
     private LatLng startLocation;
     private LatLng endLocation;
     private List<List<LatLng>> polylines;
+    private TravelMode travelMode;
 
     public int getDistance() {
         return distance;
@@ -51,5 +52,13 @@ public class Section {
 
     public void setPolylines(List<List<LatLng>> polylines) {
         this.polylines = polylines;
+    }
+
+    public TravelMode getTravelMode() {
+        return travelMode;
+    }
+
+    public void setTravelMode(TravelMode travelMode) {
+        this.travelMode = travelMode;
     }
 }
