@@ -54,6 +54,9 @@ public class LunchActivity extends AppCompatActivity {
         RadioButton RadioButton_3=(RadioButton) findViewById(R.id.radioButton3);
         RadioButton_3.setText(R.string.set_place_radio_button_3);
 
+        RadioButton RadioButton_4=(RadioButton) findViewById(R.id.radioButton4);
+        RadioButton_4.setText(R.string.set_place_radio_button_4);
+
         controller = new LunchController(this);
 
         FloatingActionButton StartLunchButton = (FloatingActionButton) findViewById(R.id.floatingActionButton_StartLunchHour);
@@ -101,6 +104,10 @@ public class LunchActivity extends AppCompatActivity {
                 if (checked)
                     DataManager.getRouteParam().setLunchOption(LunchOption.anyPlace);
                     break;
+            case R.id.radioButton4:
+                if (checked)
+                    DataManager.getRouteParam().setLunchOption(LunchOption.noPlace);
+                break;
         }
     }
 

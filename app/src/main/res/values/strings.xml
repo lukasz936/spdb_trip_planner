@@ -14,4 +14,5 @@
     <string name="set_place_radio_button_1">chcę wybrać konkretne miejsce</string>
     <string name="set_place_radio_button_2">chcę wybrać typ restauracji</string>
     <string name="set_place_radio_button_3">jestem otwarty na propozycje</string>
+    <string name="set_place_radio_button_4">nie chcę jeść lunchu</string>
 </resources>

@@ -12,7 +12,7 @@ public class RouteParam {
 
     private List<Place> places = new ArrayList<>();
 
-    private LunchOption lunchOption = LunchOption.anyPlace;
+    private LunchOption lunchOption;
 
     private String restaurantName;
 
@@ -25,6 +25,7 @@ public class RouteParam {
         this.restaurant = new Place(null, null);
         this.restaurant.setStartDate(new Date(2018, 1, 1, 13, 0));
         this.restaurant.setDuration(60);
+        this.lunchOption = LunchOption.noPlace;
     }
 
     public void setLunchOption(LunchOption lunchOption) {
