@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         placeListLayout = (RelativeLayout) findViewById(R.id.mainPlaceList);
         controller = new MainController(this);
         getLocationPermission();
-        DataManager.init();
+        //DataManager.init();
     }
 
     @Override

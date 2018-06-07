@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
+import com.tripplanner.model.Route;
 import com.tripplanner.model.RouteRequestData;
 import com.tripplanner.model.Section;
 import com.tripplanner.model.TravelMode;
@@ -80,15 +81,19 @@ public class RequestAsyncTask extends AsyncTask {
             for (int i = 0; i < DataManager.getRoute().getSections().size(); ++i) {
                 if (DataManager.getRoute().getSections().get(i).getStartLocation().latitude == newSection.getStartLocation().latitude &&
                         DataManager.getRoute().getSections().get(i).getStartLocation().longitude == newSection.getStartLocation().longitude) {
-                    DataManager.getRoute().getSections().set(i,newSection);
+                    DataManager.getRoute().getSections().set(i, newSection);
                 }
             }
             DataManager.getRoute().updateDuration();
             DataManager.getRoute().updateDistance();
             googleApiController.getView().showRoute();
-        } else if(requestType == RouteRequestData.FIND_RESTAURANT){
+        } else if (requestType == RouteRequestData.FIND_RESTAURANT) {
             List<LatLng> newRestaurantsList = JsonDataParser.parseSearchResponse((String) o);
             DataManager.getRouteRequestData().restaurantsList = newRestaurantsList;
+        } else if (requestType == RouteRequestData.FIND_ROUTE_RESTAURANT) {
+            Route route = JsonDataParser.parseRouteRestaurantResponse((String) o);
+            googleApiController.addRouteToRoute(DataManager.getRoute(), route,  DataManager.getRouteRequestData().afterPlaceIdx);
+            googleApiController.getView().showRoute();
         }
     }
 

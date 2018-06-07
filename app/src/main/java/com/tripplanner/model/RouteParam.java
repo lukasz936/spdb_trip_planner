@@ -12,7 +12,7 @@ public class RouteParam {
 
     private List<Place> places = new ArrayList<>();
 
-    private LunchOption lunchOption;
+    private LunchOption lunchOption = LunchOption.noPlace;
 
     private String restaurantName;
 

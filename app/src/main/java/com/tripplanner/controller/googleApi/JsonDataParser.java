@@ -62,6 +62,52 @@ public class JsonDataParser {
         return new Route();
     }
 
+    public static Route parseRouteRestaurantResponse(String data) {
+        if (data == null) {
+            return null;
+        }
+        JSONObject jsonData = null;
+        try {
+            jsonData = new JSONObject(data);
+
+            JSONArray jsonRoutes = jsonData.getJSONArray("routes");
+            if (jsonRoutes.length() == 0) {
+                return null;
+            }
+            JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
+            JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
+            List<Section> sections = new ArrayList<>();
+            List<Place> places = new ArrayList<>();
+            for (int i = 0; i < jsonLegs.length(); ++i) {
+                Section section = new Section();
+                JSONObject jsonLeg = jsonLegs.getJSONObject(i);
+                JSONObject jsonLegDistance = jsonLeg.getJSONObject("distance");
+                JSONObject jsonLegDuration = jsonLeg.getJSONObject("duration");
+                JSONObject jsonLegEndLocation = jsonLeg.getJSONObject("end_location");
+                JSONObject jsonLegStartLocation = jsonLeg.getJSONObject("start_location");
+                JSONArray jsonSteps = jsonLeg.getJSONArray("steps");
+                List<List<LatLng>> polylines = new ArrayList<>();
+                for (int j = 0; j < jsonSteps.length(); ++j) {
+                    JSONObject jsonStep = jsonSteps.getJSONObject(j);
+                    JSONObject jsonStepPolyline = jsonStep.getJSONObject("polyline");
+                    polylines.add(decodePolyLine(jsonStepPolyline.getString("points")));
+                }
+                section.setDistance(jsonLegDistance.getInt("value"));
+                section.setDuration(jsonLegDuration.getInt("value") / 60);
+                section.setEndLocation(new LatLng(jsonLegEndLocation.getDouble("lat"), jsonLegEndLocation.getDouble("lng")));
+                section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
+                section.setPolylines(polylines);
+                sections.add(section);
+            }
+            places.add(DataManager.getRouteParam().getRestaurant());
+            places.add(DataManager.getRouteParam().getPlaceByLatLng(sections.get(sections.size() - 1).getEndLocation()));
+            return new Route(sections, places);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new Route();
+    }
+
     public static Section parseSectionRouteResponse(String data) {
         if (data == null) {
             return null;
