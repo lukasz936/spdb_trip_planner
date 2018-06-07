@@ -34,7 +34,7 @@ public class GoogleApiController {
         }
         DataManager.setRouteRequestData(new RouteRequestData());
         RequestAsyncTask requestAsyncTask_1 = new RequestAsyncTask();
-        requestAsyncTask_1.execute(createNearbyRestaurantUrl(new LatLng( 52,21), 50), RouteRequestData.FIND_RESTAURANT, this, DataManager.getRouteParam().getTravelMode());
+        requestAsyncTask_1.execute(createNearbyRestaurantUrl(new LatLng( 52,21), 5000), RouteRequestData.FIND_RESTAURANT, this, DataManager.getRouteParam().getTravelMode());
 
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(),
