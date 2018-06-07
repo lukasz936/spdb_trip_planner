@@ -27,8 +27,8 @@ public class RouteParam {
         this.restaurant.setDuration(60);
     }
 
-    public void setLunchOption(LunchOption lunchOption_1) {
-        lunchOption = lunchOption_1;
+    public void setLunchOption(LunchOption lunchOption) {
+        this.lunchOption = lunchOption;
     }
 
     public Place getRestaurant() {
@@ -36,11 +36,11 @@ public class RouteParam {
     }
 
     public void setRestaurant(Place restaurant) {
-        restaurant = restaurant;
+        this.restaurant = restaurant;
     }
 
     public void setRestaurantName(String restaurantName) {
-        restaurantName = restaurantName;
+        this.restaurantName = restaurantName;
     }
 
     public LunchOption getLunchOption() {

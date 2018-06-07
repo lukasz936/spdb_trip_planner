@@ -4,6 +4,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
+import com.tripplanner.model.LunchOption;
 import com.tripplanner.model.Place;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.RouteParam;
@@ -61,17 +62,32 @@ public class GoogleApiController {
         int minDuration = 1000000000;
         int minId = 0;
         List<Route> routes =  DataManager.getRouteRequestData().routes;
-        for (int i = 0; i < DataManager.getRouteRequestData().routes.size(); ++i) {
-            int currentDuration = DataManager.getRouteRequestData().routes.get(i).getDuration();
-            if (currentDuration < minDuration) {
-                minDuration = currentDuration;
-                minId = i;
+        Route route;
+        if(DataManager.getRouteParam().getLunchOption().equals(LunchOption.noPlace)){
+            for (int i = 0; i < DataManager.getRouteRequestData().routes.size(); ++i) {
+                int currentDuration = DataManager.getRouteRequestData().routes.get(i).getDuration();
+                if (currentDuration < minDuration) {
+                    minDuration = currentDuration;
+                    minId = i;
+                }
             }
+            route = DataManager.getRouteRequestData().routes.get(minId);
+            setTravelTypeForSections(route, DataManager.getRouteParam().getTravelMode());
+            DataManager.setRoute(route);
+        } else if (DataManager.getRouteParam().getLunchOption().equals(LunchOption.exactPlace)){
+
         }
-        Route route = DataManager.getRouteRequestData().routes.get(minId);
-        setTravelTypeForSections(route, DataManager.getRouteParam().getTravelMode());
-        DataManager.setRoute(route);
+
+
+
+
+
+
     }
+
+    /*private findPlaceByTime(){
+
+    }*/
 
     private void setTravelTypeForSections(Route route, TravelMode travelMode) {
         for (Section section : route.getSections()) {
@@ -108,7 +124,7 @@ public class GoogleApiController {
         String output = "json";
         String radius = "radius="+radius_int;
         String keyword = "keyword="+restaurantName;
-        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
+        return "https://maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
     }
 
     private String createNearbyRestaurantUrl(LatLng searchFromThisPlace, String radius_int) {
@@ -116,7 +132,7 @@ public class GoogleApiController {
         String output = "json";
         String radius = "radius="+radius_int;
         String keyword = "keyword=restaurant";
-        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
+        return "https://maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
     }
 
     public MapsActivity getView() {
