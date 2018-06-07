@@ -1,7 +1,9 @@
 package com.tripplanner.controller.googleApi;
 
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
+import com.tripplanner.model.Place;
 import com.tripplanner.model.Route;
 import com.tripplanner.model.Section;
 import com.tripplanner.model.TravelMode;
@@ -30,6 +32,7 @@ public class JsonDataParser {
             JSONObject jsonRoute = jsonRoutes.getJSONObject(0);
             JSONArray jsonLegs = jsonRoute.getJSONArray("legs");
             List<Section> sections = new ArrayList<>();
+            List<Place> places = new ArrayList<>();
             for (int i = 0; i < jsonLegs.length(); ++i) {
                 Section section = new Section();
                 JSONObject jsonLeg = jsonLegs.getJSONObject(i);
@@ -50,8 +53,9 @@ public class JsonDataParser {
                 section.setStartLocation(new LatLng(jsonLegStartLocation.getDouble("lat"), jsonLegStartLocation.getDouble("lng")));
                 section.setPolylines(polylines);
                 sections.add(section);
+                places.add(DataManager.getRouteParam().getPlaceByLatLng(section.getEndLocation()));
             }
-            return new Route(sections, DataManager.getPlaces());
+            return new Route(sections, places);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -101,7 +105,7 @@ public class JsonDataParser {
         return new Section();
     }
 
-    public static List<LatLng> parseSearchResponse(String data)  {
+    public static List<LatLng> parseSearchResponse(String data) {
         if (data == null) {
             return null;
         }
@@ -116,14 +120,14 @@ public class JsonDataParser {
 
             List<LatLng> placesList = new ArrayList<>();
 
-            for(int i = 0; i<jsonResults.length(); ++i){
+            for (int i = 0; i < jsonResults.length(); ++i) {
                 JSONObject jsonObject = jsonResults.getJSONObject(i);
                 JSONObject jsonGeometry = jsonObject.getJSONObject("geometry");
                 JSONObject jsonLocation = jsonGeometry.getJSONObject("location");
                 double lat = jsonLocation.getDouble("lat");
                 double lng = jsonLocation.getDouble("lng");
                 String name = jsonObject.getString("name");
-                placesList.add(new LatLng(lat,lng));
+                placesList.add(new LatLng(lat, lng));
             }
 
             return placesList;

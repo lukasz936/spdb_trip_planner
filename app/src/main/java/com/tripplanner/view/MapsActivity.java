@@ -245,8 +245,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setMyLocationEnabled(false);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DataManager.userLocation, ZOOM_POINT));
         mMap.clear();
-        for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            mMap.addMarker(new MarkerOptions().position(DataManager.getPlaces().get(i).getLatLng()));
+        for (int i = 0; i < DataManager.getRoute().getPlaces().size(); ++i) {
+            mMap.addMarker(new MarkerOptions().position(DataManager.getRoute().getPlaces().get(i).getLatLng()));
         }
         PolylineOptions polylineOptions = new PolylineOptions().geodesic(true).color(Color.BLUE).width(13);
         for (Section section : DataManager.getRoute().getSections()) {
@@ -270,12 +270,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Section section = DataManager.getRoute().getSections().get(i);
             calendar.add(Calendar.MINUTE, section.getDuration());
             String sectionInfo = travelModeDictionary.get(section.getTravelMode()) +
-                    "   " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " min" +
+                    "\n" + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " min" +
                     "   " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m";
-            String placeInfo = DataManager.getPlaces().get(i).getName() +
-                    "   " + DataManager.getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getPlaces().get(i).getDuration() % 60 + " min" +
-                    "\n" + format.format(calendar.getTime()) + " - ";
-            calendar.add(Calendar.MINUTE, DataManager.getPlaces().get(i).getDuration());
+            String placeInfo = DataManager.getRoute().getPlaces().get(i).getName() +
+                    "\n" + DataManager.getRoute().getPlaces().get(i).getDuration() / 60 + " h " + DataManager.getRoute().getPlaces().get(i).getDuration() % 60 + " min" +
+                    "   " + format.format(calendar.getTime()) + " - ";
+            calendar.add(Calendar.MINUTE, DataManager.getRoute().getPlaces().get(i).getDuration());
             placeInfo += format.format(calendar.getTime());
             infoList.add(sectionInfo);
             infoList.add(placeInfo);
@@ -296,36 +296,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public boolean onMarkerClick(final Marker marker) {
         String[] items = new String[4];
         String travelMode_pl = "Pieszo";
-        Section section = new Section();
-        for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
-            if (marker.getPosition().latitude == DataManager.getPlaces().get(i).getLatLng().latitude && marker.getPosition().longitude == DataManager.getPlaces().get(i).getLatLng().longitude) {
-                items[0] = DataManager.getPlaces().get(i).getName();
-                section = DataManager.getRoute().getSections().get(i);
-                switch (section.getTravelMode()) {
-                    case DRIVING:
-                        travelMode_pl = "Samochód";
-                        break;
-                    case TRANSIT:
-                        travelMode_pl = "Komunikacja";
-                        break;
-                    case WALKING:
-                        travelMode_pl = "Pieszo";
-                        break;
-                }
-                items[1] = "Typ transport: " + travelMode_pl;
-                items[2] = "Czas odcinka: " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " m ";
-                items[3] = "Dystans: " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m ";
+        int index = DataManager.getRoute().getPlaceIdxByLatLng(marker.getPosition());
+        final Section section = DataManager.getRoute().getSections().get(index);
+        switch (section.getTravelMode()) {
+            case DRIVING:
+                travelMode_pl = "Samochód";
                 break;
-            }
+            case TRANSIT:
+                travelMode_pl = "Komunikacja";
+                break;
+            case WALKING:
+                travelMode_pl = "Pieszo";
+                break;
         }
-        final Section sectionToChange = section;
+        items[0] = DataManager.getRoute().getPlaces().get(index).getName();
+        items[1] = "Typ transport: " + travelMode_pl;
+        items[2] = "Czas odcinka: " + section.getDuration() / 60 + " h " + section.getDuration() % 60 + " m ";
+        items[3] = "Dystans: " + section.getDistance() / 1000 + " km " + section.getDistance() % 1000 + " m ";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Informacje o odcinku trasy:");
         builder.setItems(items, null);
         String positive = "Pieszo";
         String negative = "Samochód";
-        switch (sectionToChange.getTravelMode()) {
+        switch (section.getTravelMode()) {
             case DRIVING: {
                 positive = "Pieszo";
                 negative = "Komunikacja";
@@ -345,17 +339,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setPositiveButton(positive, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (sectionToChange.getTravelMode()) {
+                switch (section.getTravelMode()) {
                     case DRIVING: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.WALKING);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.WALKING);
                         break;
                     }
                     case TRANSIT: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.WALKING);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.WALKING);
                         break;
                     }
                     case WALKING: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.DRIVING);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.DRIVING);
                         break;
                     }
                 }
@@ -364,17 +358,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         builder.setNegativeButton(negative, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                switch (sectionToChange.getTravelMode()) {
+                switch (section.getTravelMode()) {
                     case DRIVING: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.TRANSIT);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.TRANSIT);
                         break;
                     }
                     case TRANSIT: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.DRIVING);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.DRIVING);
                         break;
                     }
                     case WALKING: {
-                        mapsController.changeSection(sectionToChange.getStartLocation(), sectionToChange.getEndLocation(),TravelMode.TRANSIT);
+                        mapsController.changeSection(section.getStartLocation(), section.getEndLocation(),TravelMode.TRANSIT);
                         break;
                     }
                 }

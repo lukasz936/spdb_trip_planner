@@ -1,5 +1,9 @@
 package com.tripplanner.model;
 
+import android.location.Location;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,14 @@ public class Route {
         this.sections = sections;
     }
 
+    public List<Place> getPlaces() {
+        return places;
+    }
+
+    public void setPlaces(List<Place> places) {
+        this.places = places;
+    }
+
     public void updateDistance(){
         int distance = 0;
         for(Section section : sections){
@@ -60,5 +72,24 @@ public class Route {
             duration += place.getDuration();
         }
         this.duration = duration;
+    }
+
+    public Integer getPlaceIdxByLatLng(LatLng latLng) {
+        Location location = new Location("");
+        location.setLatitude(latLng.latitude);
+        location.setLongitude(latLng.longitude);
+        Integer nearestPlaceIdx = null;
+        float distance = 100000000;
+        for (int i =0; i< places.size(); ++i) {
+            Location tmpLocation = new Location("");
+            tmpLocation.setLatitude(places.get(i).getLatLng().latitude);
+            tmpLocation.setLongitude(places.get(i).getLatLng().longitude);
+            float tmpDistance = location.distanceTo(tmpLocation);
+            if (tmpDistance < distance) {
+                distance = tmpDistance;
+                nearestPlaceIdx = i;
+            }
+        }
+        return nearestPlaceIdx;
     }
 }
