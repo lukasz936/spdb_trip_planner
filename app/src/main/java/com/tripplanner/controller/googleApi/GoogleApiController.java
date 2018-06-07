@@ -33,6 +33,9 @@ public class GoogleApiController {
             return;
         }
         DataManager.setRouteRequestData(new RouteRequestData());
+        RequestAsyncTask requestAsyncTask_1 = new RequestAsyncTask();
+        requestAsyncTask_1.execute(createNearbyRestaurantUrl(new LatLng( 52,21), 50), RouteRequestData.FIND_RESTAURANT, this, DataManager.getRouteParam().getTravelMode());
+
         for (int i = 0; i < DataManager.getPlaces().size(); ++i) {
             String url = createRouteUrl(DataManager.userLocation, DataManager.getPlaces().get(i).getLatLng(),
                     createViasExceptPlace(i), DataManager.getRouteParam().getTravelMode());
@@ -108,15 +111,15 @@ public class GoogleApiController {
         String output = "json";
         String radius = "radius="+radius_int;
         String keyword = "keyword="+restaurantName;
-        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
+        return "https://maps.googleapis.com/maps/api/place/nearbysearch/" + output + "?" + location +"&"+ radius +"&" + keyword+"&key=AIzaSyBervaiJ4otUM0fKG4q-sXbF4zurIC1nck";
     }
 
-    private String createNearbyRestaurantUrl(LatLng searchFromThisPlace, String radius_int) {
+    private String createNearbyRestaurantUrl(LatLng searchFromThisPlace, Integer radius_int) {
         String location = "location=" + searchFromThisPlace.latitude + "," + searchFromThisPlace.longitude;
         String output = "json";
         String radius = "radius="+radius_int;
         String keyword = "keyword=restaurant";
-        return "maps.googleapis.com/maps/api/place/radarsearch/" + output + "?" + location +"&"+ radius +"&" + keyword;
+        return "https://maps.googleapis.com/maps/api/place/nearbysearch/" + output + "?" + location +"&"+ radius +"&" + keyword + "&key=AIzaSyBervaiJ4otUM0fKG4q-sXbF4zurIC1nck";
     }
 
     public MapsActivity getView() {

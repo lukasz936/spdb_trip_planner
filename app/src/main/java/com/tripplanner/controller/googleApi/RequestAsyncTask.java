@@ -3,6 +3,7 @@ package com.tripplanner.controller.googleApi;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.tripplanner.model.DataManager;
 import com.tripplanner.model.RouteRequestData;
 import com.tripplanner.model.Section;
@@ -15,6 +16,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 public class RequestAsyncTask extends AsyncTask {
 
@@ -84,6 +86,9 @@ public class RequestAsyncTask extends AsyncTask {
             DataManager.getRoute().updateDuration();
             DataManager.getRoute().updateDistance();
             googleApiController.getView().showRoute();
+        } else if(requestType == RouteRequestData.FIND_RESTAURANT){
+            List<LatLng> newRestaurantsList = JsonDataParser.parseSearchResponse((String) o);
+            DataManager.getRouteRequestData().restaurantsList = newRestaurantsList;
         }
     }
 
