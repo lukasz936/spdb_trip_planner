@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 .setMessage("W wybranym miejscu nic nie zjesz!")
                                 .show();
                     } else {
-                        currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString());
+                        currentPlace = new com.tripplanner.model.Place(place.getLatLng(), place.getName().toString(), 60);
                         mapsController.selectPlace(currentPlace, false);
                     }
                 }
@@ -234,7 +234,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         .setMessage("W wybranym miejscu nic nie zjesz!")
                         .show();
             } else {
-                currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(), placeSelected.getName().toString());
+                currentPlace = new com.tripplanner.model.Place(placeSelected.getLatLng(), placeSelected.getName().toString(), 60);
                 mapsController.selectPlace(currentPlace, true);
             }
         }
